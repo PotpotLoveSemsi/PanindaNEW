@@ -1,0 +1,59 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.RegisterPage"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="25" Spacing="15">
+
+            <Label Text="Gumawa ng Account"
+                   FontSize="28"
+                   TextColor="#D16BA5"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Already Registered?"
+                   TextColor="Black"
+                   FontSize="14"
+                   HorizontalOptions="Center" />
+
+            <Label Text="NAME" 
+                   TextColor="Black"/>
+            <Entry x:Name="nameEntry"
+                   Placeholder="Enter name"
+                   PlaceholderColor="DarkGray"
+                   TextColor="Black"
+                   BackgroundColor="White" />
+
+            <Label Text="EMAIL" 
+                   TextColor="Black"/>
+            <Entry x:Name="emailEntry"
+                   Placeholder="Enter email"
+                   PlaceholderColor="DarkGray"
+                   TextColor="Black"
+                   BackgroundColor="White" />
+
+            <Label Text="PASSWORD" 
+                   TextColor="Black"/>
+            <Entry x:Name="passwordEntry"
+                   Placeholder="Enter password"
+                   PlaceholderColor="DarkGray"
+                   TextColor="Black"
+                   IsPassword="True"
+                   BackgroundColor="white" />
+
+            <Label Text="DATE OF BIRTH" 
+                   TextColor="Black"/>
+            <DatePicker x:Name="dobPicker" 
+                        TextColor="Black"/>
+
+            <Button Text="Sign up"
+                    BackgroundColor="#F4A300"
+                    TextColor="Black"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    Clicked="OnRegisterClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

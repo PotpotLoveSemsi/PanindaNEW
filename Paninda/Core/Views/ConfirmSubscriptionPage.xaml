@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.ConfirmSubscriptionPage"
+             BackgroundColor="#F2EFEF">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <HorizontalStackLayout>
+            <Border BackgroundColor="#C084FC"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    StrokeThickness="0"
+                    Padding="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="20" />
+                </Border.StrokeShape>
+                <Label Text="←" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Border>
+            <Label Text="Confirm Subscription"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#C084FC"
+                   Margin="10,0,0,0"/>
+        </HorizontalStackLayout>
+
+        <Label Text="Premium" TextColor="#E5A823" FontSize="18"/>
+        <Label Text="Price: ₱200/month" TextColor="Black"/>
+
+        <Label Text="Payment Method:" Margin="0,20,0,0" TextColor="Black"/>
+
+        <Picker x:Name="PaymentPicker" Title="Select Payment" TextColor="Black" TitleColor="Gray">
+            <Picker.Items>
+                <x:String>GCash</x:String>
+                <x:String>Maya</x:String>
+            </Picker.Items>
+        </Picker>
+
+        <Button Text="CONFIRM PAYMENT"
+                BackgroundColor="#E5A823"
+                TextColor="Black"
+                CornerRadius="10"
+                HeightRequest="50"
+                Margin="0,30,0,0"
+                Clicked="OnConfirmPayment"/>
+    </VerticalStackLayout>
+</ContentPage>

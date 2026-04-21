@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.DashboardPage"
+             BackgroundColor="#F5F5F5">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <!-- Header -->
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" />
+                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnNotificationClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <!-- Title (purple) -->
+            <Label Text="DAILY SUMMARY" FontSize="26" FontAttributes="Bold" TextColor="#B455FF" />
+
+            <!-- Top Selling (dynamic) -->
+            <Border BackgroundColor="White" StrokeThickness="0" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Top Selling Today 📈" FontAttributes="Bold" TextColor="#1C1C1C" />
+                    <Label x:Name="TopSellingLabel" Text="Loading..." TextColor="#1C1C1C" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Items Running Low (dynamic) -->
+            <Border BackgroundColor="White" StrokeThickness="0" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Items Running Low ⚠️" FontAttributes="Bold" TextColor="Red" />
+                    <Label x:Name="LowStockLabel" Text="Loading..." TextColor="#1C1C1C" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Incoming Shipments (dynamic) -->
+            <Border BackgroundColor="White" StrokeThickness="0" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Incoming Shipments 📦" FontAttributes="Bold" TextColor="#1C1C1C" />
+                    <Label x:Name="IncomingLabel" Text="Loading..." TextColor="#1C1C1C" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Suggested Restock (dynamic) -->
+            <Border BackgroundColor="White" StrokeThickness="0" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Suggested Restock ⭐" FontAttributes="Bold" TextColor="#1C1C1C" />
+                    <Label x:Name="RestockLabel" Text="Loading..." TextColor="#1C1C1C" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Premium Insights -->
+            <Border BackgroundColor="#FFF8E1" StrokeThickness="0" Padding="15">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="💎 PREMIUM INSIGHTS (Locked 🔒)" FontAttributes="Bold" TextColor="#1C1C1C" />
+                    <Label Text="• AI Demand Forecasting" TextColor="#1C1C1C" />
+                    <Label Text="• Advanced Sales Analytics" TextColor="#1C1C1C" />
+                    <Button Text="Upgrade to Premium" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" Clicked="OnUpgradeClicked" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Bottom Buttons -->
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                <Button Text="INVENTORY" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" Clicked="OnInventoryClicked" />
+                <Button Text="RESTOCK" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" Grid.Column="1" Clicked="OnRestockClicked" />
+                <Button Text="SUPPLIERS" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" Grid.Column="2" Clicked="OnSuppliersClicked" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

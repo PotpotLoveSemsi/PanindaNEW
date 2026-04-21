@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.AddProductPage"
+             BackgroundColor="#F2F2F2">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15">
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" />
+                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
+                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+            <VerticalStackLayout Padding="20" Spacing="18">
+                <HorizontalStackLayout Spacing="10">
+                    <Border BackgroundColor="#B455FF" WidthRequest="35" HeightRequest="35" StrokeThickness="0" Padding="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <Label Text="←" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" />
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnBackTapped" />
+                        </Border.GestureRecognizers>
+                    </Border>
+                    <Label Text="ADD PRODUCT" FontSize="26" FontAttributes="Bold" TextColor="#B455FF" />
+                </HorizontalStackLayout>
+                <Label Text="Product Name" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="NameEntry" TextColor="Black" Placeholder="Enter product name" PlaceholderColor="Gray" />
+                </Border>
+                <Label Text="Category" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="CategoryEntry" TextColor="Black" Placeholder="e.g., Food, Drink" PlaceholderColor="Gray" />
+                </Border>
+                <Label Text="Initial Stock" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="StockEntry" Keyboard="Numeric" TextColor="Black" Placeholder="0" PlaceholderColor="Gray" />
+                </Border>
+                <Label Text="Minimum Stock Level" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="MinStockEntry" Keyboard="Numeric" Text="5" TextColor="Black" Placeholder="5" PlaceholderColor="Gray" />
+                </Border>
+                <Button Text="SAVE PRODUCT" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" HeightRequest="55" Clicked="OnSaveClicked" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

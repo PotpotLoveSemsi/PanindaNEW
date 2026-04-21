@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.OrdersPage"
+             BackgroundColor="#F2EFEF">
+    <ScrollView>
+        <VerticalStackLayout Spacing="15">
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLogoClicked" />
+                    </Image.GestureRecognizers>
+                </Image>
+                <Label Grid.Column="1" />
+                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
+                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnProfileClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+            <VerticalStackLayout Padding="20" Spacing="20">
+                <HorizontalStackLayout Spacing="10">
+                    <Border BackgroundColor="#C084FC" WidthRequest="40" HeightRequest="40" StrokeThickness="0" Padding="0">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+                        <Label Text="←" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontSize="18">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBackTapped" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Border>
+                    <Label Text="ORDERS" FontSize="28" FontAttributes="Bold" TextColor="#C084FC" VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <CollectionView x:Name="OrdersList">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#E6E1E1" StrokeThickness="0" Padding="15" Margin="0,10">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20" />
+                                </Border.StrokeShape>
+                                <VerticalStackLayout Spacing="5">
+                                    <Label Text="{Binding OrderNumber}" TextColor="#A855F7" FontAttributes="Bold" FontSize="16"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Supplier: " TextColor="#D4A017"/>
+                                                <Span Text="{Binding SupplierName}" TextColor="Black"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label Text="Items Ordered:" TextColor="#D4A017"/>
+                                    <Label Text="{Binding ItemsSummary}" TextColor="Black"/>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Status: " TextColor="#D4A017"/>
+                                                <Span Text="{Binding Status}" TextColor="Black"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="ETA: " TextColor="#D4A017"/>
+                                                <Span Text="{Binding ETA}" TextColor="Black"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Total Cost: " TextColor="#D4A017"/>
+                                                <Span Text="{Binding TotalCost, StringFormat='₱{0}'}" TextColor="Black"/>
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <Button Text="BACK TO DASHBOARD" BackgroundColor="#FBBF24" TextColor="Black" CornerRadius="10" HeightRequest="45" Clicked="OnDashboardClicked"/>
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
