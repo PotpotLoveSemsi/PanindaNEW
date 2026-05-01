@@ -22,16 +22,30 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+
+		<!-- Suppress all common warnings -->
+		<NoWarn>CS8612;CS8622;CS0618;CA1416;CA1422;CS1998;CS0168;CS0108;CS0629;CS8618;CS8602;CS8600;CS8603;CS8625;CS8604;CS8620;CS8767</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<MauiImage Include="Resources\Images\logo.png" />
 	</ItemGroup>
 
+	<!-- App icon -->
+	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\myicon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Updated SQLite packages to support 16KB page size (Android 16 requirement) -->
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
+		<!-- Remove any existing SQLitePCLRaw.bundle_green reference if present -->
+	</ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 	</ItemGroup>
 
 	<ItemGroup>

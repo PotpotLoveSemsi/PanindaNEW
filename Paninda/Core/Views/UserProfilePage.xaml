@@ -46,13 +46,10 @@
             <VerticalStackLayout Spacing="8">
                 <Label Text="Store Owner Name" TextColor="Black"/>
                 <Label x:Name="OwnerNameLabel" Text="Loading..." FontAttributes="Bold" TextColor="Black"/>
-
                 <Label Text="Store Name" TextColor="Black"/>
                 <Label x:Name="StoreNameLabel" Text="Loading..." FontAttributes="Bold" TextColor="Black"/>
-
                 <Label Text="Phone Number" TextColor="Black"/>
                 <Label x:Name="PhoneLabel" Text="Loading..." FontAttributes="Bold" TextColor="Black"/>
-
                 <Label Text="Location" TextColor="Black"/>
                 <Label x:Name="LocationLabel" Text="Loading..." FontAttributes="Bold" TextColor="Black"/>
             </VerticalStackLayout>
@@ -74,10 +71,25 @@
                 </Label>
             </VerticalStackLayout>
 
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Label Text="[ Upgrade to Premium ]" TextColor="#C86DD7" FontAttributes="Bold"/>
-                <Label Text="🪙" FontSize="20" TextColor="#F4A300"/>
-            </HorizontalStackLayout>
+            <!-- Upgrade to Premium (shown only for non‑premium) -->
+            <StackLayout x:Name="PremiumUpgradeContainer">
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <Label Text="[ Upgrade to Premium ]" TextColor="#C86DD7" FontAttributes="Bold">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUpgradeClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                    <Label Text="🪙" FontSize="20" TextColor="#F4A300"/>
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- Premium Active message (shown only for premium users) -->
+            <Label x:Name="PremiumActiveLabel"
+                   Text="✨ Premium Active ✨"
+                   TextColor="#2E7D32"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   IsVisible="False" />
 
             <Button Text="LOGOUT"
                     BackgroundColor="#F4A300"

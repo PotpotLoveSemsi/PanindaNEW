@@ -9,7 +9,7 @@ namespace Paninda.Views;
 public partial class InventoryPage : ContentPage
 {
     private User _currentUser;
-    private ObservableCollection<ProductViewModel> _products;
+    private ObservableCollection<ProductViewModel> _products = new(); // ✅ initialized
 
     public InventoryPage(User user)
     {
@@ -27,7 +27,7 @@ public partial class InventoryPage : ContentPage
     private async void LoadProducts()
     {
         var products = await App.Database.GetProductsAsync(_currentUser.Id);
-        _products = new ObservableCollection<ProductViewModel>();
+        _products.Clear(); // ✅ reuse the collection instead of creating a new one
         foreach (var p in products)
         {
             _products.Add(new ProductViewModel(p, async () =>

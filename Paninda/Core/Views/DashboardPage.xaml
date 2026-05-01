@@ -27,7 +27,7 @@
                 </Label>
             </Grid>
 
-            <!-- Title (purple) -->
+            <!-- Title -->
             <Label Text="DAILY SUMMARY" FontSize="26" FontAttributes="Bold" TextColor="#B455FF" />
 
             <!-- Top Selling (dynamic) -->
@@ -74,8 +74,9 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Premium Insights -->
-            <Border BackgroundColor="#FFF8E1" StrokeThickness="0" Padding="15">
+            <!-- 🔒 PREMIUM SECTION – LOCKED (shown only for non‑premium users) -->
+            <Border x:Name="PremiumLockedContainer"
+                    BackgroundColor="#FFF8E1" StrokeThickness="0" Padding="15">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="12" />
                 </Border.StrokeShape>
@@ -83,7 +84,24 @@
                     <Label Text="💎 PREMIUM INSIGHTS (Locked 🔒)" FontAttributes="Bold" TextColor="#1C1C1C" />
                     <Label Text="• AI Demand Forecasting" TextColor="#1C1C1C" />
                     <Label Text="• Advanced Sales Analytics" TextColor="#1C1C1C" />
+                    <Label Text="• Smart Restock Optimization" TextColor="#1C1C1C" />
                     <Button Text="Upgrade to Premium" BackgroundColor="#F4B400" TextColor="Black" CornerRadius="20" Clicked="OnUpgradeClicked" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- ✅ PREMIUM SECTION – UNLOCKED (shown only for premium users) -->
+            <Border x:Name="PremiumUnlockedContainer"
+                    BackgroundColor="#E8F5E9" StrokeThickness="0" Padding="15"
+                    IsVisible="False">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12" />
+                </Border.StrokeShape>
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="💎 PREMIUM (Active ✅)" FontAttributes="Bold" TextColor="#2E7D32" />
+                    <Label Text="• AI Demand Forecasting – enabled" TextColor="#1C1C1C" />
+                    <Label Text="• Advanced Sales Analytics – enabled" TextColor="#1C1C1C" />
+                    <Label Text="• Smart Restock Optimization – enabled" TextColor="#1C1C1C" />
+                    <Label Text="Thank you for being a Premium member!" FontSize="12" TextColor="#1C1C1C"/>
                 </VerticalStackLayout>
             </Border>
 

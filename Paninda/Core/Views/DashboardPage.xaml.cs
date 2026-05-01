@@ -16,7 +16,24 @@ public partial class DashboardPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        // Refresh user data from database (to get updated IsPremium flag)
+        _currentUser = await App.Database.GetUserByEmailAsync(_currentUser.Email);
+        SetPremiumVisibility();
         await LoadDashboardData();
+    }
+
+    private void SetPremiumVisibility()
+    {
+        if (_currentUser.IsPremium)
+        {
+            PremiumLockedContainer.IsVisible = false;
+            PremiumUnlockedContainer.IsVisible = true;
+        }
+        else
+        {
+            PremiumLockedContainer.IsVisible = true;
+            PremiumUnlockedContainer.IsVisible = false;
+        }
     }
 
     private async Task LoadDashboardData()
@@ -29,7 +46,7 @@ public partial class DashboardPage : ContentPage
 
     private async Task LoadLowStockItems()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ filter by user
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
 
         if (lowStock.Count == 0)
@@ -46,7 +63,7 @@ public partial class DashboardPage : ContentPage
 
     private async Task LoadTopSellingItems()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ filter by user
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var topSelling = products.OrderByDescending(p => p.SoldToday).Take(3).ToList();
 
         if (topSelling.Count == 0)
@@ -80,7 +97,7 @@ public partial class DashboardPage : ContentPage
 
     private async Task LoadSuggestedRestock()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ filter by user
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
 
         if (lowStock.Count == 0)

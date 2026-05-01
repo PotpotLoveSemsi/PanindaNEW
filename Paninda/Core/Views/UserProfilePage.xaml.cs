@@ -13,6 +13,7 @@ public partial class UserProfilePage : ContentPage
         InitializeComponent();
         _currentUser = user;
         LoadUserData();
+        SetPremiumVisibility();
     }
 
     private void LoadUserData()
@@ -22,7 +23,6 @@ public partial class UserProfilePage : ContentPage
         PhoneLabel.Text = _currentUser.Phone ?? "Not set";
         LocationLabel.Text = _currentUser.Location ?? "Not set";
 
-        // Load profile picture if exists
         if (!string.IsNullOrEmpty(_currentUser.ProfilePicturePath) && File.Exists(_currentUser.ProfilePicturePath))
         {
             ProfileImage.Source = ImageSource.FromFile(_currentUser.ProfilePicturePath);
@@ -33,6 +33,20 @@ public partial class UserProfilePage : ContentPage
         {
             ProfileImage.IsVisible = false;
             ProfileEmoji.IsVisible = true;
+        }
+    }
+
+    private void SetPremiumVisibility()
+    {
+        if (_currentUser.IsPremium)
+        {
+            PremiumUpgradeContainer.IsVisible = false;
+            PremiumActiveLabel.IsVisible = true;
+        }
+        else
+        {
+            PremiumUpgradeContainer.IsVisible = true;
+            PremiumActiveLabel.IsVisible = false;
         }
     }
 
@@ -53,23 +67,17 @@ public partial class UserProfilePage : ContentPage
     {
         try
         {
-            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
-            {
-                Title = "Select Profile Picture"
-            });
+            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions { Title = "Select Profile Picture" });
             if (result != null)
             {
-                // Save image to app data folder
                 var localFilePath = Path.Combine(FileSystem.AppDataDirectory, $"user_{_currentUser.Id}_profile.jpg");
                 using var stream = await result.OpenReadAsync();
                 using var fileStream = File.Create(localFilePath);
                 await stream.CopyToAsync(fileStream);
 
-                // Update user model and database
                 _currentUser.ProfilePicturePath = localFilePath;
                 await App.Database.UpdateUserAsync(_currentUser);
 
-                // Display the new image
                 ProfileImage.Source = ImageSource.FromFile(localFilePath);
                 ProfileImage.IsVisible = true;
                 ProfileEmoji.IsVisible = false;
@@ -79,5 +87,10 @@ public partial class UserProfilePage : ContentPage
         {
             await DisplayAlert("Error", "Could not select image: " + ex.Message, "OK");
         }
+    }
+
+    private async void OnUpgradeClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new PremiumPage(_currentUser));
     }
 }

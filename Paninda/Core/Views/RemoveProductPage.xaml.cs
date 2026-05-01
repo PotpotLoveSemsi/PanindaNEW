@@ -5,7 +5,7 @@ namespace Paninda.Views;
 public partial class RemoveProductPage : ContentPage
 {
     private User _currentUser;
-    private Product _selectedProduct;
+    private Product? _selectedProduct = null; // ✅ nullable and initialized
 
     public RemoveProductPage(User user)
     {
@@ -17,7 +17,7 @@ public partial class RemoveProductPage : ContentPage
 
     private async void LoadProducts()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ filter by user
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
         ProductsListView.ItemsSource = products;
     }
 

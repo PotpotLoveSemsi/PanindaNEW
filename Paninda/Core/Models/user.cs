@@ -15,5 +15,5 @@ public class User
     public string? Phone { get; set; }
     public string? Location { get; set; }
     public string? ProfilePicturePath { get; set; }
-    public bool IsPremium { get; set; }   // ✅ new
+    public bool IsPremium { get; set; }   
 }
