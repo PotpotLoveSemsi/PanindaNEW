@@ -8,33 +8,18 @@ public partial class CreateSupplierOrderPage : ContentPage
     private User _currentUser;
     private ObservableCollection<OrderItem> _orderItems = new();
 
-    public CreateSupplierOrderPage(User user)
+    // New constructor that accepts preselected items
+    public CreateSupplierOrderPage(User user, List<OrderItem> selectedItems)
     {
         InitializeComponent();
         _currentUser = user;
-        LoadOrderItems();
+        _orderItems = new ObservableCollection<OrderItem>(selectedItems);
+        OrderItemsList.ItemsSource = _orderItems;
         DeliveryDateLabel.Text = DateTime.Now.AddDays(3).ToString("MMMM dd");
     }
 
-    private async void LoadOrderItems()
-    {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ pass userId
-        var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
-        _orderItems.Clear();
-        foreach (var p in lowStock)
-        {
-            int suggested = (p.MinStockLevel * 2) - p.Stock;
-            if (suggested < 5) suggested = 5;
-            _orderItems.Add(new OrderItem
-            {
-                Name = p.Name,
-                Price = p.Price,
-                Quantity = suggested,
-                Subtotal = p.Price * suggested
-            });
-        }
-        OrderItemsList.ItemsSource = _orderItems;
-    }
+    // Old constructor for compatibility (if needed elsewhere)
+    public CreateSupplierOrderPage(User user) : this(user, new List<OrderItem>()) { }
 
     private async void OnConfirmClicked(object sender, EventArgs e)
     {
@@ -48,7 +33,8 @@ public partial class CreateSupplierOrderPage : ContentPage
                 Quantity = item.Quantity,
                 OrderDate = DateTime.Now,
                 Status = "Pending",
-                ETA = DateTime.Now.AddDays(3)
+                ETA = DateTime.Now.AddDays(3),
+                UserId = _currentUser.Id
             };
             await App.Database.SaveSupplierOrderAsync(supplierOrder);
         }

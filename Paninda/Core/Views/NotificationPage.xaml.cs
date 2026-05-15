@@ -19,7 +19,7 @@ public partial class NotificationPage : ContentPage
         var notifications = new ObservableCollection<NotificationItem>();
 
         // 1. Low stock alerts (filter by user)
-        var products = await App.Database.GetProductsAsync(_currentUser.Id); // ✅ pass userId
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var lowStockProducts = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
         foreach (var p in lowStockProducts)
         {
@@ -30,8 +30,8 @@ public partial class NotificationPage : ContentPage
             });
         }
 
-        // 2. Predictive Delay Alerts (based on ETA)
-        var orders = await App.Database.GetSupplierOrdersAsync();
+        // 2. Predictive Delay Alerts (based on ETA) - ✅ filtered by user
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var today = DateTime.Today;
         foreach (var o in orders.Where(o => o.Status == "Pending" && o.ETA.HasValue))
         {
@@ -70,7 +70,7 @@ public partial class NotificationPage : ContentPage
             }
         }
 
-        // 3. Other incoming shipments (without duplicating the ones already added)
+        // 3. Other incoming shipments (without duplicates)
         var incomingOrders = orders.Where(o => o.Status == "Pending" && (o.ETA >= today || o.ETA == null)).ToList();
         foreach (var o in incomingOrders)
         {
@@ -84,7 +84,6 @@ public partial class NotificationPage : ContentPage
             }
         }
 
-        // 4. If no notifications, show a friendly message
         if (notifications.Count == 0)
         {
             notifications.Add(new NotificationItem

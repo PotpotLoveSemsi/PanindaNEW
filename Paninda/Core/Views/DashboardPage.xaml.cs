@@ -16,7 +16,6 @@ public partial class DashboardPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        // Refresh user data from database (to get updated IsPremium flag)
         _currentUser = await App.Database.GetUserByEmailAsync(_currentUser.Email);
         SetPremiumVisibility();
         await LoadDashboardData();
@@ -80,7 +79,8 @@ public partial class DashboardPage : ContentPage
 
     private async Task LoadIncomingShipments()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync();
+        // ✅ filter by current user ID
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var incoming = orders.Where(o => o.Status == "Pending" && (o.ETA >= DateTime.Now || o.ETA == null)).ToList();
 
         if (incoming.Count == 0)
@@ -116,16 +116,12 @@ public partial class DashboardPage : ContentPage
         RestockLabel.Text = sb.ToString();
     }
 
-    // Navigation methods
+    // Navigation methods (unchanged)
     private async void OnInventoryClicked(object sender, EventArgs e) => await Navigation.PushAsync(new InventoryPage(_currentUser));
     private async void OnRestockClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SmartRestockPage(_currentUser));
     private async void OnSuppliersClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SupplierPage(_currentUser));
     private async void OnUpgradeClicked(object sender, EventArgs e) => await Navigation.PushAsync(new PremiumPage(_currentUser));
     private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
     private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PushAsync(new UserProfilePage(_currentUser));
-
-    private async void OnNotificationClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new NotificationPage(_currentUser));
-    }
+    private async void OnNotificationClicked(object sender, EventArgs e) => await Navigation.PushAsync(new NotificationPage(_currentUser));
 }

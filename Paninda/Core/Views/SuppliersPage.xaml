@@ -7,24 +7,15 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Grid ColumnDefinitions="Auto,*" VerticalOptions="Center">
-                <Button Text="←"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        BackgroundColor="#D16BA5"
-                        TextColor="White"
-                        CornerRadius="20"
-                        Clicked="OnBackClicked"/>
-                <Label Text="SUPPLIERS"
-                       Grid.Column="1"
-                       FontSize="26"
-                       FontAttributes="Bold"
-                       TextColor="#D16BA5"
-                       VerticalOptions="Center"
-                       Margin="10,0,0,0"/>
-            </Grid>
+            <!-- Title only (back button removed) -->
+            <Label Text="SUPPLIERS"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#D16BA5"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,0"/>
 
-            <!-- Supplier cards (using Border, not Frame) -->
+            <!-- Supplier cards unchanged -->
             <Border BackgroundColor="#EDEDED" StrokeThickness="0" Padding="15">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />

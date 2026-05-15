@@ -5,47 +5,137 @@
              BackgroundColor="White">
     <ScrollView>
         <VerticalStackLayout Spacing="15">
-            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
-                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+            <Grid BackgroundColor="#D9D9D9"
+                  Padding="15"
+                  ColumnDefinitions="Auto,*,Auto,Auto">
+                <Image Grid.Column="0"
+                       Source="logo.png"
+                       HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
                     </Image.GestureRecognizers>
                 </Image>
                 <Label Grid.Column="1" />
-                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
-                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
+                <Label Grid.Column="2"
+                       Text="🔔"
+                       FontSize="24"
+                       Margin="0,0,10,0"
+                       TextColor="Black" />
+                <Label Grid.Column="3"
+                       Text="👤"
+                       FontSize="24"
+                       TextColor="Black">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnProfileClicked" />
                     </Label.GestureRecognizers>
                 </Label>
             </Grid>
+
             <VerticalStackLayout Padding="20" Spacing="15">
                 <HorizontalStackLayout>
-                    <Label Text="←" FontSize="24" TextColor="#A855F7">
+                    <Label Text="←"
+                           FontSize="24"
+                           TextColor="#A855F7">
                         <Label.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackTapped" />
                         </Label.GestureRecognizers>
                     </Label>
-                    <Label Text="SMART RESTOCK" FontSize="22" FontAttributes="Bold" TextColor="#A855F7" Margin="10,0,0,0"/>
+                    <Label Text="SMART RESTOCK"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#A855F7"
+                           Margin="10,0,0,0" />
                 </HorizontalStackLayout>
-                <Label Text="Based on sales trends + stock levels" TextColor="#C084FC" FontSize="14"/>
-                <CollectionView x:Name="RestockSuggestionsList">
+
+                <Label Text="Based on sales trends + stock levels"
+                       TextColor="#C084FC"
+                       FontSize="14" />
+
+                <!-- Select All / Clear All buttons -->
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                    <Button Text="Select All"
+                            BackgroundColor="#E0E0E0"
+                            TextColor="Black"
+                            CornerRadius="10"
+                            HeightRequest="35"
+                            Clicked="OnSelectAllClicked" />
+                    <Button Text="Clear All"
+                            BackgroundColor="#E0E0E0"
+                            TextColor="Black"
+                            CornerRadius="10"
+                            HeightRequest="35"
+                            Clicked="OnClearAllClicked" />
+                </HorizontalStackLayout>
+
+                <!-- Product list with checkboxes -->
+                <CollectionView x:Name="RestockSuggestionsList" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout Margin="0,10">
-                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
-                                <Label Text="{Binding Stock, StringFormat='Current Stock: {0}'}" TextColor="Gray"/>
-                                <Label Text="{Binding SuggestedOrder, StringFormat='Suggested Order: {0}'}" TextColor="#A855F7"/>
-                                <BoxView HeightRequest="1" BackgroundColor="#E0E0E0" Margin="0,5"/>
+                                <HorizontalStackLayout Spacing="10">
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              VerticalOptions="Center" />
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding Name}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="Black" />
+                                        <Label Text="{Binding Stock, StringFormat='Current Stock: {0}'}"
+                                               TextColor="Gray" />
+                                        <Label Text="{Binding SuggestedOrder, StringFormat='Suggested Order: {0}'}"
+                                               TextColor="#A855F7" />
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                                <BoxView HeightRequest="1"
+                                         BackgroundColor="#E0E0E0"
+                                         Margin="0,5" />
                             </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Label Text="🔒 AI Forecast (Premium)" Margin="0,20,0,0" TextColor="Gray"/>
-                <Label Text="• Seasonal demand prediction" TextColor="Gray"/>
-                <Label Text="• Holiday-based suggestions" TextColor="Gray"/>
-                <Label Text="[ Unlock Premium ]" HorizontalOptions="Center" Margin="0,10" TextColor="#A855F7"/>
-                <Button Text="CREATE ORDER" BackgroundColor="#FBBF24" TextColor="Black" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Clicked="OnCreateOrderClicked"/>
+
+                <!-- Premium teaser – LOCKED (shown only for non‑premium users) -->
+                <StackLayout x:Name="PremiumLockedContainer">
+                    <Label Text="🔒 AI Forecast (Premium)"
+                           Margin="0,20,0,0"
+                           TextColor="Gray" />
+                    <Label Text="• Seasonal demand prediction"
+                           TextColor="Gray" />
+                    <Label Text="• Holiday-based suggestions"
+                           TextColor="Gray" />
+                    <Label Text="[ Unlock Premium ]"
+                           HorizontalOptions="Center"
+                           Margin="0,10"
+                           TextColor="#A855F7">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnUnlockPremiumClicked" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+
+                <!-- Premium unlocked message (shown only for premium users) -->
+                <StackLayout x:Name="PremiumUnlockedContainer" IsVisible="False">
+                    <Label Text="✅ AI Forecast (Active)"
+                           Margin="0,20,0,0"
+                           TextColor="#2E7D32"
+                           FontAttributes="Bold" />
+                    <Label Text="• Seasonal demand prediction – enabled"
+                           TextColor="#1C1C1C" />
+                    <Label Text="• Holiday-based suggestions – enabled"
+                           TextColor="#1C1C1C" />
+                    <Label Text="Thank you for being a Premium member!"
+                           HorizontalOptions="Center"
+                           Margin="0,10"
+                           TextColor="#2E7D32" />
+                </StackLayout>
+
+                <Button Text="CREATE ORDER"
+                        BackgroundColor="#FBBF24"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        Clicked="OnCreateOrderClicked" />
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

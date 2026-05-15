@@ -16,7 +16,8 @@ public partial class OrdersPage : ContentPage
 
     private async void LoadOrders()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync();
+        // ✅ filter by current user ID
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var displayOrders = new ObservableCollection<OrderDisplay>();
         int counter = 1;
         foreach (var o in orders)
@@ -36,25 +37,10 @@ public partial class OrdersPage : ContentPage
         OrdersList.ItemsSource = displayOrders;
     }
 
-    private async void OnBackTapped(object sender, EventArgs e)
-    {
-        await Navigation.PopAsync();
-    }
-
-    private async void OnDashboardClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopToRootAsync();
-    }
-
-    private async void OnLogoClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopToRootAsync();
-    }
-
-    private async void OnProfileClicked(object sender, EventArgs e)
-    {
-        await Navigation.PopToRootAsync();
-    }
+    private async void OnBackTapped(object sender, EventArgs e) => await Navigation.PopAsync();
+    private async void OnDashboardClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
 }
 
 public class OrderDisplay

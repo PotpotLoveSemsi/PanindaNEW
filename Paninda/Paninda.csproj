@@ -28,19 +28,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\AppIcon\myicon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<MauiImage Include="Resources\Images\logo.png" />
 	</ItemGroup>
 
 	<!-- App icon -->
-	<ItemGroup>
-		<MauiIcon Include="Resources\AppIcon\myicon.png" />
-	</ItemGroup>
 
 	<ItemGroup>
-		<!-- Updated SQLite packages to support 16KB page size (Android 16 requirement) -->
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
-		<!-- Remove any existing SQLitePCLRaw.bundle_green reference if present -->
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +69,12 @@
 		<MauiXaml Update="Core\Views\UserProfilePage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiIcon Include="Resources\AppIcon\myicon.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </MauiIcon>
 	</ItemGroup>
 
 </Project>

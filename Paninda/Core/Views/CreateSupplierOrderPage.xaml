@@ -35,12 +35,14 @@
                     <Label Text="CREATE SUPPLIER ORDER" FontSize="20" FontAttributes="Bold" TextColor="#A855F7" Margin="10,0,0,0"/>
                 </HorizontalStackLayout>
 
-                <!-- Supplier Picker (FIXED: text color set to black) -->
+                <!-- Supplier Picker with all four suppliers -->
                 <Label Text="Supplier" TextColor="#C084FC" FontSize="16"/>
                 <Picker x:Name="SupplierPicker" Title="Select Supplier" TextColor="Black" TitleColor="Gray">
                     <Picker.Items>
                         <x:String>ABC Foods</x:String>
                         <x:String>XYZ Supply</x:String>
+                        <x:String>YNS Snacks</x:String>
+                        <x:String>TGS Hygienix</x:String>
                     </Picker.Items>
                 </Picker>
 

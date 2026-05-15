@@ -16,7 +16,8 @@ public partial class OrderHistoryPage : ContentPage
 
     private async void LoadOrders()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync();
+        // ✅ filter by current user ID
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var displayOrders = new ObservableCollection<OrderDisplay>();
         int counter = 1;
         foreach (var o in orders)
@@ -36,3 +37,13 @@ public partial class OrderHistoryPage : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e) => await Navigation.PopAsync();
 }
+
+// OrderDisplay already defined elsewhere, but if not, uncomment:
+// public class OrderDisplay
+// {
+//     public string OrderNumber { get; set; } = string.Empty;
+//     public string SupplierName { get; set; } = string.Empty;
+//     public string ItemsSummary { get; set; } = string.Empty;
+//     public string Status { get; set; } = string.Empty;
+//     public decimal TotalCost { get; set; }
+// }

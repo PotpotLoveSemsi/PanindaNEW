@@ -7,22 +7,12 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <Grid ColumnDefinitions="Auto,*">
-                <Button Text="←"
-                        WidthRequest="40"
-                        HeightRequest="40"
-                        BackgroundColor="#C86DD7"
-                        TextColor="White"
-                        CornerRadius="20"
-                        Clicked="OnBackClicked"/>
-
-                <Label Text="ORDER HISTORY"
-                       Grid.Column="1"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="#C86DD7"
-                       HorizontalOptions="Center"/>
-            </Grid>
+            <Label Text="ORDER HISTORY"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="#C86DD7"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,0"/>
 
             <CollectionView x:Name="OrdersHistoryList">
                 <CollectionView.ItemTemplate>

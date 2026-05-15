@@ -6,27 +6,12 @@
 
     <VerticalStackLayout Padding="20" Spacing="20">
 
-        <HorizontalStackLayout>
-            <Border BackgroundColor="#C084FC"
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    StrokeThickness="0"
-                    Padding="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="20" />
-                </Border.StrokeShape>
-                <Label Text="←" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackClicked" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </Border>
-            <Label Text="Confirm Subscription"
-                   FontSize="22"
-                   FontAttributes="Bold"
-                   TextColor="#C084FC"
-                   Margin="10,0,0,0"/>
-        </HorizontalStackLayout>
+        <!-- Title only -->
+        <Label Text="Confirm Subscription"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="#C084FC"
+               HorizontalOptions="Center"/>
 
         <Label Text="Premium" TextColor="#E5A823" FontSize="18"/>
         <Label Text="Price: ₱200/month" TextColor="Black"/>

@@ -13,4 +13,5 @@ public class Product
     public int MinStockLevel { get; set; } = 5;
     public int SoldToday { get; set; }
     public int UserId { get; set; }   
+
 }

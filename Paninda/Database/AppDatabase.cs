@@ -25,13 +25,13 @@ public class AppDatabase
     public Task<List<User>> GetAllUsersAsync() => _database.Table<User>().ToListAsync();
     public Task<int> UpdateUserAsync(User user) => _database.UpdateAsync(user);
 
-    // Product methods (now filtered by user ID)
+    // Product methods (filtered by user ID)
     public Task<List<Product>> GetProductsAsync(int userId) => _database.Table<Product>().Where(p => p.UserId == userId).ToListAsync();
     public Task<int> SaveProductAsync(Product product) => _database.InsertAsync(product);
     public Task<int> UpdateProductAsync(Product product) => _database.UpdateAsync(product);
     public Task<int> DeleteProductAsync(Product product) => _database.DeleteAsync(product);
 
-    // SupplierOrder methods
-    public Task<List<SupplierOrder>> GetSupplierOrdersAsync() => _database.Table<SupplierOrder>().ToListAsync();
+    // SupplierOrder methods (filtered by user ID)
+    public Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId) => _database.Table<SupplierOrder>().Where(o => o.UserId == userId).ToListAsync();
     public Task<int> SaveSupplierOrderAsync(SupplierOrder order) => _database.InsertAsync(order);
 }
