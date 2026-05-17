@@ -52,6 +52,7 @@ public partial class SmartRestockPage : ContentPage
                 Name = p.Name,
                 Stock = p.Stock,
                 SuggestedOrder = suggested,
+                Quantity = suggested,   // initial quantity = suggested order
                 Price = p.Price,
                 IsSelected = true
             });
@@ -72,8 +73,8 @@ public partial class SmartRestockPage : ContentPage
         {
             Name = s.Name,
             Price = s.Price,
-            Quantity = s.SuggestedOrder,
-            Subtotal = s.SuggestedOrder * s.Price
+            Quantity = s.Quantity,   // use the user-adjusted quantity
+            Subtotal = s.Quantity * s.Price
         }).ToList();
 
         await Navigation.PushAsync(new CreateSupplierOrderPage(_currentUser, orderItems));
@@ -109,6 +110,13 @@ public class RestockSuggestion : INotifyPropertyChanged
     public int Stock { get; set; }
     public int SuggestedOrder { get; set; }
     public decimal Price { get; set; }
+
+    private int _quantity;
+    public int Quantity
+    {
+        get => _quantity;
+        set { _quantity = value; OnPropertyChanged(); }
+    }
 
     private bool _isSelected;
     public bool IsSelected

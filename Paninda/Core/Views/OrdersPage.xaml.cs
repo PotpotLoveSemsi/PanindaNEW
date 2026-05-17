@@ -16,13 +16,12 @@ public partial class OrdersPage : ContentPage
 
     private async void LoadOrders()
     {
-        // ✅ filter by current user ID
         var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var displayOrders = new ObservableCollection<OrderDisplay>();
         int counter = 1;
         foreach (var o in orders)
         {
-            decimal total = o.Quantity * 20; // placeholder price
+            decimal total = (o.ConfirmedPrice ?? 0) * o.Quantity; // use confirmed price if available
             displayOrders.Add(new OrderDisplay
             {
                 OrderNumber = $"Order #{1000 + counter}",
@@ -30,7 +29,9 @@ public partial class OrdersPage : ContentPage
                 ItemsSummary = $"{o.ProductName} - {o.Quantity}",
                 Status = o.Status,
                 ETA = o.ETA?.ToString("MMMM dd") ?? "Pending",
-                TotalCost = total
+                TotalCost = total,
+                RequestedPrice = o.RequestedPrice,
+                ConfirmedPrice = o.ConfirmedPrice
             });
             counter++;
         }
@@ -51,4 +52,6 @@ public class OrderDisplay
     public string Status { get; set; } = string.Empty;
     public string ETA { get; set; } = string.Empty;
     public decimal TotalCost { get; set; }
+    public decimal? RequestedPrice { get; set; }
+    public decimal? ConfirmedPrice { get; set; }
 }

@@ -35,9 +35,13 @@
                     <Label Text="CREATE SUPPLIER ORDER" FontSize="20" FontAttributes="Bold" TextColor="#A855F7" Margin="10,0,0,0"/>
                 </HorizontalStackLayout>
 
-                <!-- Supplier Picker with all four suppliers -->
+                <!-- Supplier Picker with event handler -->
                 <Label Text="Supplier" TextColor="#C084FC" FontSize="16"/>
-                <Picker x:Name="SupplierPicker" Title="Select Supplier" TextColor="Black" TitleColor="Gray">
+                <Picker x:Name="SupplierPicker" 
+                        Title="Select Supplier" 
+                        TextColor="Black" 
+                        TitleColor="Gray"
+                        SelectedIndexChanged="OnSupplierSelected">
                     <Picker.Items>
                         <x:String>ABC Foods</x:String>
                         <x:String>XYZ Supply</x:String>
@@ -52,7 +56,7 @@
                         <DataTemplate>
                             <VerticalStackLayout Margin="0,5">
                                 <Label Text="{Binding Name}" FontAttributes="Bold" TextColor="Black"/>
-                                <Label Text="{Binding Price, StringFormat='Price: ₱{0}'}" TextColor="Gray"/>
+                                <!-- Price label removed -->
                                 <Label Text="{Binding Quantity, StringFormat='Quantity: {0}'}" TextColor="Gray"/>
                                 <Label Text="{Binding Subtotal, StringFormat='Subtotal: ₱{0}'}" TextColor="#A855F7"/>
                             </VerticalStackLayout>
@@ -63,7 +67,23 @@
                 <Label Text="Expected Delivery" TextColor="#C084FC" FontSize="16" Margin="0,10,0,0"/>
                 <Label x:Name="DeliveryDateLabel" Text="" TextColor="Black"/>
 
-                <Button Text="CONFIRM ORDER" BackgroundColor="#FBBF24" TextColor="Black" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Margin="0,20,0,0" Clicked="OnConfirmClicked"/>
+                <!-- Notify button starts disabled -->
+                <Button x:Name="NotifyButton" 
+                        Text="NOTIFY SUPPLIER" 
+                        BackgroundColor="#FBBF24" 
+                        TextColor="Black" 
+                        FontAttributes="Bold" 
+                        CornerRadius="10" 
+                        HeightRequest="50" 
+                        Margin="0,20,0,0" 
+                        IsEnabled="False"
+                        Clicked="OnNotifyClicked"/>
+
+                <StackLayout x:Name="PriceEntryContainer" IsVisible="False">
+                    <Label Text="Supplier Price (₱)" TextColor="#C084FC" FontSize="16" Margin="0,10,0,0"/>
+                    <Entry x:Name="SupplierPriceEntry" Placeholder="Enter price from supplier" Keyboard="Numeric" TextColor="Black" PlaceholderColor="Gray"/>
+                    <Button Text="CONFIRM ORDER" BackgroundColor="#FBBF24" TextColor="Black" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Margin="0,10,0,0" Clicked="OnConfirmClicked"/>
+                </StackLayout>
 
             </VerticalStackLayout>
         </VerticalStackLayout>

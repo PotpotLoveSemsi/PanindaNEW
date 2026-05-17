@@ -34,4 +34,5 @@ public class AppDatabase
     // SupplierOrder methods (filtered by user ID)
     public Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId) => _database.Table<SupplierOrder>().Where(o => o.UserId == userId).ToListAsync();
     public Task<int> SaveSupplierOrderAsync(SupplierOrder order) => _database.InsertAsync(order);
+    public Task<int> UpdateOrderAsync(SupplierOrder order) => _database.UpdateAsync(order);
 }
