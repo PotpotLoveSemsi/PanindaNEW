@@ -7,33 +7,76 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <!-- Title only (back arrow removed) -->
-            <Label Text="PANINDA PREMIUM DETAILS"
+            <!-- TITLE -->
+            <Label Text="PANINDA PREMIUM"
                    FontSize="22"
                    FontAttributes="Bold"
                    TextColor="#C084FC"
-                   HorizontalOptions="Center"
-                   Margin="0,10,0,0"/>
+                   HorizontalOptions="Center"/>
 
-            <Label Text="🤖 AI Demand Forecasting" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="• Seasonal trends" TextColor="Black"/>
-            <Label Text="• Holiday prediction" TextColor="Black"/>
-            <Label Text="• Sales-based forecasting" TextColor="Black"/>
+            <!-- FEATURES -->
+            <Label Text="🤖 AI Demand Forecasting" FontAttributes="Bold"/>
+            <Label Text="• Seasonal trends"/>
+            <Label Text="• Holiday prediction"/>
+            <Label Text="• Sales-based forecasting"/>
 
-            <Label Text="📊 Advanced Sales Analytics" Margin="0,15,0,0" FontAttributes="Bold" TextColor="Black"/>
-            <Label Text="• Reports (weekly/monthly)" TextColor="Black"/>
-            <Label Text="• Sales graphs" TextColor="Black"/>
-            <Label Text="• Profit tracking" TextColor="Black"/>
+            <Label Text="📊 Advanced Sales Analytics"
+                   Margin="0,10,0,0"
+                   FontAttributes="Bold"/>
+            <Label Text="• Reports (weekly/monthly)"/>
+            <Label Text="• Sales graphs"/>
+            <Label Text="• Profit tracking"/>
 
-            <BoxView HeightRequest="1" BackgroundColor="Gray" Margin="0,20,0,10"/>
-            <Label Text="₱200 / month" FontSize="18" TextColor="Black"/>
+            <BoxView HeightRequest="1" BackgroundColor="Gray" Margin="0,15"/>
 
-            <Button Text="Subscribe Now"
+            <Label Text="₱200 / month"
+                   FontSize="18"
+                   HorizontalOptions="Center"/>
+
+            <!-- PAYMENT METHOD -->
+            <Label Text="Select Payment Method"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+
+                <Button Text="GCash"
+                        BackgroundColor="#A855F7"
+                        TextColor="White"
+                        Clicked="OnGCashClicked"/>
+
+                <Button Text="Maya"
+                        BackgroundColor="#A855F7"
+                        TextColor="White"
+                        Clicked="OnMayaClicked"/>
+
+            </HorizontalStackLayout>
+
+            <!-- QR DISPLAY -->
+            <Border BackgroundColor="White"
+                    Padding="15"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center">
+
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+
+                <Image x:Name="QrImage"
+                       WidthRequest="220"
+                       HeightRequest="220"
+                       Aspect="AspectFit"
+                       IsVisible="False"/>
+            </Border>
+
+            <!-- CONFIRM -->
+            <Button Text="CONFIRM PAYMENT"
                     BackgroundColor="#E5A823"
                     TextColor="Black"
                     CornerRadius="10"
                     HeightRequest="50"
-                    Clicked="OnSubscribeClicked"/>
+                    Clicked="OnConfirmClicked"/>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

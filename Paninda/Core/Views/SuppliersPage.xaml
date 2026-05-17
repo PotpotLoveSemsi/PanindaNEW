@@ -7,15 +7,28 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <!-- Title only (back button removed) -->
-            <Label Text="SUPPLIERS"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="#D16BA5"
-                   HorizontalOptions="Center"
-                   Margin="0,10,0,0"/>
+            <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+                <Border BackgroundColor="#A855F7"
+                        Stroke="White"
+                        StrokeThickness="1.5"
+                        Padding="12,6"
+                        StrokeShape="RoundRectangle 18">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Border.GestureRecognizers>
 
-            <!-- Supplier cards unchanged -->
+                    <HorizontalStackLayout Spacing="5">
+                        <Label Text="←" FontSize="16" TextColor="White" />
+                        <Label Text="Back" FontSize="14" TextColor="White" />
+                    </HorizontalStackLayout>
+                </Border>
+
+                <Label Text="SUPPLIERS"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#B455FF" />
+            </HorizontalStackLayout>
+
             <Border BackgroundColor="#EDEDED" StrokeThickness="0" Padding="15">
                 <Border.StrokeShape>
                     <RoundRectangle CornerRadius="20" />

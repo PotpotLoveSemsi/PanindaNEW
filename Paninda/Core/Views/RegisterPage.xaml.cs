@@ -1,6 +1,4 @@
-using Paninda;
 using Paninda.Models;
-using System;
 
 namespace Paninda.Views;
 
@@ -24,28 +22,26 @@ public partial class RegisterPage : ContentPage
         var user = new User
         {
             FullName = nameEntry.Text.Trim(),
-            Email = emailEntry.Text.Trim().ToLower(), // store email as lowercase to avoid case issues
+            Email = emailEntry.Text.Trim().ToLower(),
             Password = passwordEntry.Text,
-            DateOfBirth = dobPicker.Date ?? DateTime.Today
+            DateOfBirth = dobPicker.Date ?? DateTime.Today,
+            StoreName = "",
+            Phone = "",
+            Location = "",
+            ProfilePicturePath = "",
+            IsPremium = false
         };
 
-        var existing = await App.Database.GetUserByEmailAsync(user.Email);
-        if (existing != null)
+        bool success = await App.Supabase.RegisterUserAsync(user);
+
+        if (success)
         {
-            await DisplayAlert("Error", "Email already registered", "OK");
-            return;
+            await DisplayAlert("Success", "Account Created!", "OK");
+            await Navigation.PopAsync();
         }
-
-        await App.Database.SaveUserAsync(user);
-
-        // DEBUG: verify save worked
-        var saved = await App.Database.GetUserByEmailAsync(user.Email);
-        if (saved != null)
-            await DisplayAlert("Debug", $"Saved user: {saved.Email}, {saved.Password}", "OK");
         else
-            await DisplayAlert("Debug", "Save failed - user not found after insert", "OK");
-
-        await DisplayAlert("Success", "Account Created!", "OK");
-        await Navigation.PopAsync();
+        {
+            await DisplayAlert("Error", "Failed to create account. Check Supabase table/RLS.", "OK");
+        }
     }
 }

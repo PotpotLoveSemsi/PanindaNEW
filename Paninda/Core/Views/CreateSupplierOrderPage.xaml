@@ -26,13 +26,30 @@
             <VerticalStackLayout Padding="20" Spacing="15">
 
                 <!-- Back arrow and title -->
-                <HorizontalStackLayout>
-                    <Label Text="←" FontSize="24" TextColor="#A855F7">
-                        <Label.GestureRecognizers>
+                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+
+                    <Border BackgroundColor="#A855F7"
+            Stroke="White"
+            StrokeThickness="1.5"
+            Padding="12,6"
+            StrokeShape="RoundRectangle 18">
+
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackTapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                    <Label Text="CREATE SUPPLIER ORDER" FontSize="20" FontAttributes="Bold" TextColor="#A855F7" Margin="10,0,0,0"/>
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="←" FontSize="16" TextColor="White" VerticalOptions="Center" />
+                            <Label Text="Back" FontSize="14" TextColor="White" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Label Text="CREATE SUPPLIER ORDER"
+           FontSize="20"
+           FontAttributes="Bold"
+           TextColor="#A855F7"
+           VerticalOptions="Center"/>
+
                 </HorizontalStackLayout>
 
                 <!-- Supplier Picker with event handler -->

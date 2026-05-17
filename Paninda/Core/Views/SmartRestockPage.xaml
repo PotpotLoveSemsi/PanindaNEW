@@ -3,17 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Paninda.Views.SmartRestockPage"
              BackgroundColor="White">
+
     <ScrollView>
         <VerticalStackLayout Spacing="15">
-            <!-- Header grid unchanged -->
+
             <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
                 <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
                     </Image.GestureRecognizers>
                 </Image>
+
                 <Label Grid.Column="1" />
+
                 <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
+
                 <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnProfileClicked" />
@@ -22,57 +26,64 @@
             </Grid>
 
             <VerticalStackLayout Padding="20" Spacing="15">
-                <HorizontalStackLayout>
-                    <Label Text="←" FontSize="24" TextColor="#A855F7">
-                        <Label.GestureRecognizers>
+
+                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
+
+                    <Border BackgroundColor="#A855F7"
+                            Stroke="White"
+                            StrokeThickness="1.5"
+                            Padding="12,6"
+                            StrokeShape="RoundRectangle 18">
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackTapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
-                    <Label Text="SMART RESTOCK" FontSize="22" FontAttributes="Bold" TextColor="#A855F7" Margin="10,0,0,0" />
+                        </Border.GestureRecognizers>
+
+                        <HorizontalStackLayout Spacing="5">
+                            <Label Text="←" FontSize="16" TextColor="White" VerticalOptions="Center" />
+                            <Label Text="Back" FontSize="14" TextColor="White" VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
+
+                    <Label Text="SMART RESTOCK"
+                           FontSize="22"
+                           FontAttributes="Bold"
+                           TextColor="#A855F7"
+                           VerticalOptions="Center" />
                 </HorizontalStackLayout>
 
                 <Label Text="Based on sales trends + stock levels" TextColor="#C084FC" FontSize="14" />
 
-                <!-- Select All / Clear All buttons -->
                 <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
                     <Button Text="Select All" BackgroundColor="#E0E0E0" TextColor="Black" CornerRadius="10" HeightRequest="35" Clicked="OnSelectAllClicked" />
                     <Button Text="Clear All" BackgroundColor="#E0E0E0" TextColor="Black" CornerRadius="10" HeightRequest="35" Clicked="OnClearAllClicked" />
                 </HorizontalStackLayout>
 
-                <!-- Product list with checkbox, suggested order, and quantity stepper -->
                 <CollectionView x:Name="RestockSuggestionsList" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <VerticalStackLayout Margin="0,10">
                                 <HorizontalStackLayout Spacing="10">
                                     <CheckBox IsChecked="{Binding IsSelected}" VerticalOptions="Center" />
+
                                     <VerticalStackLayout>
                                         <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
                                         <Label Text="{Binding Stock, StringFormat='Current Stock: {0}'}" TextColor="Gray" />
-                                        <!-- Suggested order (read‑only) -->
                                         <Label Text="{Binding SuggestedOrder, StringFormat='Suggested Order: {0}'}" TextColor="#A855F7" />
-                                        <!-- Quantity stepper (user adjustable) -->
+
                                         <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
                                             <Label Text="Order Quantity: " TextColor="Black" VerticalOptions="Center"/>
-                                            <Stepper Value="{Binding Quantity}"
-                                                     Minimum="1"
-                                                     Maximum="1000"
-                                                     Increment="1"
-                                                     HorizontalOptions="Start" />
-                                            <Label Text="{Binding Quantity}"
-                                                   TextColor="#A855F7"
-                                                   VerticalOptions="Center"
-                                                   WidthRequest="30" />
+                                            <Stepper Value="{Binding Quantity}" Minimum="1" Maximum="1000" Increment="1" HorizontalOptions="Start" />
+                                            <Label Text="{Binding Quantity}" TextColor="#A855F7" VerticalOptions="Center" WidthRequest="30" />
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
                                 </HorizontalStackLayout>
+
                                 <BoxView HeightRequest="1" BackgroundColor="#E0E0E0" Margin="0,5" />
                             </VerticalStackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
 
-                <!-- Premium sections unchanged -->
                 <StackLayout x:Name="PremiumLockedContainer">
                     <Label Text="🔒 AI Forecast (Premium)" Margin="0,20,0,0" TextColor="Gray" />
                     <Label Text="• Seasonal demand prediction" TextColor="Gray" />
@@ -91,7 +102,14 @@
                     <Label Text="Thank you for being a Premium member!" HorizontalOptions="Center" Margin="0,10" TextColor="#2E7D32" />
                 </StackLayout>
 
-                <Button Text="CREATE ORDER" BackgroundColor="#FBBF24" TextColor="Black" FontAttributes="Bold" CornerRadius="10" HeightRequest="50" Clicked="OnCreateOrderClicked" />
+                <Button Text="CREATE ORDER"
+                        BackgroundColor="#FBBF24"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        Clicked="OnCreateOrderClicked" />
+
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

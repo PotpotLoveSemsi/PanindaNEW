@@ -11,21 +11,20 @@ public partial class LoginPage : ContentPage
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
-        string enteredEmail = emailEntry.Text?.Trim().ToLower() ?? "";
-        string enteredPassword = passwordEntry.Text ?? "";
+        string email = emailEntry.Text?.Trim().ToLower() ?? "";
+        string password = passwordEntry.Text ?? "";
 
-        if (string.IsNullOrWhiteSpace(enteredEmail) || string.IsNullOrWhiteSpace(enteredPassword))
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             await DisplayAlert("Error", "Please enter email and password", "OK");
             return;
         }
 
-        var user = await App.Database.GetUserByEmailAndPasswordAsync(enteredEmail, enteredPassword);
+        var user = await App.Supabase.LoginUserAsync(email, password);
 
         if (user != null)
         {
             await DisplayAlert("Success", $"Welcome {user.FullName}!", "OK");
-            // ✅ Replace the entire navigation stack so Dashboard becomes root
             Application.Current.MainPage = new NavigationPage(new DashboardPage(user));
         }
         else

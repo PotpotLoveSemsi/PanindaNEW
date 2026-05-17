@@ -12,7 +12,7 @@ public partial class SupplierPage : ContentPage
         _currentUser = user;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e)
+    private async void OnBackTapped(object sender, EventArgs e)
     {
         await Navigation.PopAsync();
     }

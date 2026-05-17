@@ -16,23 +16,36 @@ public partial class DashboardPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        _currentUser = await App.Database.GetUserByEmailAsync(_currentUser.Email);
+
+        var updatedUser = await App.Database.GetUserByEmailAsync(_currentUser.Email);
+        if (updatedUser != null)
+            _currentUser = updatedUser;
+
+        UpdateProfilePicture();
         SetPremiumVisibility();
         await LoadDashboardData();
     }
 
-    private void SetPremiumVisibility()
+    private void UpdateProfilePicture()
     {
-        if (_currentUser.IsPremium)
+        if (!string.IsNullOrEmpty(_currentUser.ProfilePicturePath) &&
+            File.Exists(_currentUser.ProfilePicturePath))
         {
-            PremiumLockedContainer.IsVisible = false;
-            PremiumUnlockedContainer.IsVisible = true;
+            DashboardProfileImage.Source = ImageSource.FromFile(_currentUser.ProfilePicturePath);
+            DashboardProfileImage.IsVisible = true;
+            DashboardProfileEmoji.IsVisible = false;
         }
         else
         {
-            PremiumLockedContainer.IsVisible = true;
-            PremiumUnlockedContainer.IsVisible = false;
+            DashboardProfileImage.IsVisible = false;
+            DashboardProfileEmoji.IsVisible = true;
         }
+    }
+
+    private void SetPremiumVisibility()
+    {
+        PremiumLockedContainer.IsVisible = !_currentUser.IsPremium;
+        PremiumUnlockedContainer.IsVisible = _currentUser.IsPremium;
     }
 
     private async Task LoadDashboardData()
@@ -48,16 +61,9 @@ public partial class DashboardPage : ContentPage
         var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
 
-        if (lowStock.Count == 0)
-        {
-            LowStockLabel.Text = "No items running low.";
-            return;
-        }
-
-        var sb = new StringBuilder();
-        foreach (var p in lowStock)
-            sb.AppendLine($"• {p.Name} – {p.Stock} left");
-        LowStockLabel.Text = sb.ToString();
+        LowStockLabel.Text = lowStock.Count == 0
+            ? "No items running low."
+            : string.Join("\n", lowStock.Select(p => $"• {p.Name} – {p.Stock} left"));
     }
 
     private async Task LoadTopSellingItems()
@@ -65,34 +71,19 @@ public partial class DashboardPage : ContentPage
         var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var topSelling = products.OrderByDescending(p => p.SoldToday).Take(3).ToList();
 
-        if (topSelling.Count == 0)
-        {
-            TopSellingLabel.Text = "No sales data yet.";
-            return;
-        }
-
-        var sb = new StringBuilder();
-        foreach (var p in topSelling)
-            sb.AppendLine($"• {p.Name} – {p.SoldToday} sold");
-        TopSellingLabel.Text = sb.ToString();
+        TopSellingLabel.Text = topSelling.Count == 0
+            ? "No sales data yet."
+            : string.Join("\n", topSelling.Select(p => $"• {p.Name} – {p.SoldToday} sold"));
     }
 
     private async Task LoadIncomingShipments()
     {
-        // ✅ filter by current user ID
         var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
         var incoming = orders.Where(o => o.Status == "Pending" && (o.ETA >= DateTime.Now || o.ETA == null)).ToList();
 
-        if (incoming.Count == 0)
-        {
-            IncomingLabel.Text = "No incoming shipments.";
-            return;
-        }
-
-        var sb = new StringBuilder();
-        foreach (var o in incoming)
-            sb.AppendLine($"{o.SupplierName} - ETA: {(o.ETA?.ToString("MMM dd") ?? "TBD")}");
-        IncomingLabel.Text = sb.ToString();
+        IncomingLabel.Text = incoming.Count == 0
+            ? "No incoming shipments."
+            : string.Join("\n", incoming.Select(o => $"{o.SupplierName} - ETA: {(o.ETA?.ToString("MMM dd") ?? "TBD")}"));
     }
 
     private async Task LoadSuggestedRestock()
@@ -100,23 +91,16 @@ public partial class DashboardPage : ContentPage
         var products = await App.Database.GetProductsAsync(_currentUser.Id);
         var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
 
-        if (lowStock.Count == 0)
-        {
-            RestockLabel.Text = "No restock needed.";
-            return;
-        }
-
-        var sb = new StringBuilder();
-        foreach (var p in lowStock)
-        {
-            int suggested = (p.MinStockLevel * 2) - p.Stock;
-            if (suggested < 5) suggested = 5;
-            sb.AppendLine($"• Order {suggested} {p.Name}");
-        }
-        RestockLabel.Text = sb.ToString();
+        RestockLabel.Text = lowStock.Count == 0
+            ? "No restock needed."
+            : string.Join("\n", lowStock.Select(p =>
+            {
+                int suggested = (p.MinStockLevel * 2) - p.Stock;
+                if (suggested < 5) suggested = 5;
+                return $"• Order {suggested} {p.Name}";
+            }));
     }
 
-    // Navigation methods (unchanged)
     private async void OnInventoryClicked(object sender, EventArgs e) => await Navigation.PushAsync(new InventoryPage(_currentUser));
     private async void OnRestockClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SmartRestockPage(_currentUser));
     private async void OnSuppliersClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SupplierPage(_currentUser));
