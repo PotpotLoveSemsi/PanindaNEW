@@ -1,6 +1,5 @@
 using Paninda.Models;
 using Microsoft.Maui.Media;
-using Microsoft.Maui.Storage;
 
 namespace Paninda.Views;
 
@@ -20,7 +19,7 @@ public partial class UserProfilePage : ContentPage
     {
         base.OnAppearing();
 
-        var updatedUser = await App.Database.GetUserByEmailAsync(_currentUser.Email);
+        var updatedUser = await App.Supabase.GetUserByEmailAsync(_currentUser.Email);
         if (updatedUser != null)
             _currentUser = updatedUser;
 
@@ -35,10 +34,9 @@ public partial class UserProfilePage : ContentPage
         PhoneLabel.Text = _currentUser.Phone ?? "Not set";
         LocationLabel.Text = _currentUser.Location ?? "Not set";
 
-        if (!string.IsNullOrEmpty(_currentUser.ProfilePicturePath) &&
-            File.Exists(_currentUser.ProfilePicturePath))
+        if (!string.IsNullOrWhiteSpace(_currentUser.ProfilePicturePath))
         {
-            ProfileImage.Source = ImageSource.FromFile(_currentUser.ProfilePicturePath);
+            ProfileImage.Source = ImageSource.FromUri(new Uri(_currentUser.ProfilePicturePath));
             ProfileImage.IsVisible = true;
             ProfileEmoji.IsVisible = false;
         }
@@ -55,28 +53,6 @@ public partial class UserProfilePage : ContentPage
         PremiumActiveLabel.IsVisible = _currentUser.IsPremium;
     }
 
-    private async void OnBackTapped(object sender, EventArgs e)
-    {
-        await Navigation.PopAsync();
-    }
-
-    private async void OnEditProfile(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new EditProfilePage(_currentUser));
-    }
-
-    private async void OnOrderHistory(object sender, EventArgs e)
-    {
-        await Navigation.PushAsync(new OrderHistoryPage(_currentUser));
-    }
-
-    private async void OnLogoutClicked(object sender, EventArgs e)
-    {
-        bool confirm = await DisplayAlert("Logout", "Are you sure?", "Yes", "No");
-        if (confirm)
-            Application.Current.MainPage = new NavigationPage(new LoginPage());
-    }
-
     private async void OnChangeProfilePicture(object sender, EventArgs e)
     {
         try
@@ -86,20 +62,22 @@ public partial class UserProfilePage : ContentPage
                 Title = "Select Profile Picture"
             });
 
-            if (result == null)
-                return;
-
-            var localFilePath = Path.Combine(
-                FileSystem.AppDataDirectory,
-                $"user_{_currentUser.Id}_profile.jpg"
-            );
+            if (result == null) return;
 
             using var stream = await result.OpenReadAsync();
-            using var fileStream = File.Create(localFilePath);
-            await stream.CopyToAsync(fileStream);
 
-            _currentUser.ProfilePicturePath = localFilePath;
-            await App.Database.UpdateUserAsync(_currentUser);
+            string fileName = $"user_{_currentUser.Id}_{Guid.NewGuid()}.jpg";
+            string imageUrl = await App.Supabase.UploadProfileImageAsync(stream, fileName);
+
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                await DisplayAlert("Error", "Image upload failed.", "OK");
+                return;
+            }
+
+            _currentUser.ProfilePicturePath = imageUrl;
+
+            await App.Supabase.UpdateUserAsync(_currentUser);
 
             LoadUserData();
 
@@ -107,12 +85,27 @@ public partial class UserProfilePage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", "Could not select image: " + ex.Message, "OK");
+            await DisplayAlert("Error", "Could not update image: " + ex.Message, "OK");
         }
     }
 
-    private async void OnUpgradeClicked(object sender, EventArgs e)
-    {
+    private async void OnBackTapped(object sender, EventArgs e) =>
+        await Navigation.PopAsync();
+
+    private async void OnEditProfile(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new EditProfilePage(_currentUser));
+
+    private async void OnOrderHistory(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new OrderHistoryPage(_currentUser));
+
+    private async void OnUpgradeClicked(object sender, EventArgs e) =>
         await Navigation.PushAsync(new PremiumPage(_currentUser));
+
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+        bool confirm = await DisplayAlert("Logout", "Are you sure?", "Yes", "No");
+
+        if (confirm)
+            Application.Current.MainPage = new NavigationPage(new LoginPage());
     }
 }

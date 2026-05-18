@@ -3,41 +3,63 @@
              x:Class="Paninda.Views.LoginPage"
              BackgroundColor="#F5F5F5">
 
-    <VerticalStackLayout Padding="25" Spacing="15">
+    <VerticalStackLayout Padding="25"
+                         Spacing="18"
+                         VerticalOptions="Start"
+                         Margin="0,120,0,0">
 
         <Label Text="Mag Log-in"
-               FontSize="28"
+               FontSize="30"
+               FontAttributes="Bold"
                TextColor="#D16BA5"
                HorizontalOptions="Center" />
 
-        <Label Text="EMAIL" 
-               TextColor="Black"/>
-        <Entry x:Name="emailEntry"
-               Placeholder="Enter email"
-               PlaceholderColor="DarkGray"
-               TextColor="Black"
-               BackgroundColor="White" />
+        <Border BackgroundColor="White"
+                Padding="20"
+                StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18"/>
+            </Border.StrokeShape>
 
-        <Label Text="PASSWORD" 
-               TextColor="Black"/>
-        <Entry x:Name="passwordEntry"
-               Placeholder="Enter password"
-               PlaceholderColor="DarkGray"
-               TextColor="Black"
-               IsPassword="True"
-               BackgroundColor="White" />
+            <VerticalStackLayout Spacing="14">
 
-        <Image Source="appicon.png"
-               HeightRequest="120"
-               HorizontalOptions="Center" />
+                <Label Text="EMAIL" TextColor="Black"/>
+                <Entry x:Name="emailEntry"
+                       Placeholder="Enter email"
+                       PlaceholderColor="DarkGray"
+                       TextColor="Black"
+                       Keyboard="Email"/>
 
-        <Button Text="Log In"
-                BackgroundColor="#F4A300"
-                TextColor="Black"
-                CornerRadius="10"
-                HeightRequest="35"
-                Clicked="OnLoginClicked" />
+                <Label Text="PASSWORD" TextColor="Black"/>
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <Entry x:Name="passwordEntry"
+                           Grid.Column="0"
+                           Placeholder="Enter password"
+                           PlaceholderColor="DarkGray"
+                           TextColor="Black"
+                           IsPassword="True"/>
+
+                    <Button x:Name="ShowPasswordButton"
+                            Grid.Column="1"
+                            Text="👁"
+                            BackgroundColor="Transparent"
+                            TextColor="Black"
+                            FontSize="18"
+                            WidthRequest="50"
+                            Clicked="OnShowPasswordClicked"/>
+                </Grid>
+
+                <Button Text="Log In"
+                        BackgroundColor="#F4A300"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        CornerRadius="22"
+                        HeightRequest="50"
+                        Clicked="OnLoginClicked" />
+
+            </VerticalStackLayout>
+        </Border>
 
     </VerticalStackLayout>
-
 </ContentPage>

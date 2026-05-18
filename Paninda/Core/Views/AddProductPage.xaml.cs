@@ -4,7 +4,7 @@ namespace Paninda.Views;
 
 public partial class AddProductPage : ContentPage
 {
-    private User _currentUser;
+    private readonly User _currentUser;
 
     public AddProductPage(User user)
     {
@@ -23,19 +23,31 @@ public partial class AddProductPage : ContentPage
         var product = new Product
         {
             Name = NameEntry.Text.Trim(),
-            Category = CategoryEntry.Text.Trim(),
+            Category = CategoryEntry.Text?.Trim() ?? "General",
             Stock = int.TryParse(StockEntry.Text, out var stock) ? stock : 0,
             MinStockLevel = int.TryParse(MinStockEntry.Text, out var min) ? min : 5,
+            SoldToday = 0,
             Price = 0,
-            UserId = _currentUser.Id   
+            UserId = _currentUser.Id
         };
 
-        await App.Database.SaveProductAsync(product);
-        await DisplayAlert("Success", "Product added", "OK");
-        await Navigation.PopAsync();
+        bool success = await App.Products.SaveProductAsync(product);
+
+        if (success)
+        {
+            await DisplayAlert("Success", "Product added", "OK");
+
+            // 🔥 JUST GO BACK (Dashboard will auto refresh)
+            await Navigation.PopAsync();
+        }
+        else
+        {
+            await DisplayAlert("Error", "Failed to save product", "OK");
+        }
     }
 
     private async void OnBackTapped(object sender, EventArgs e) => await Navigation.PopAsync();
     private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
-    private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private async void OnProfileClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new UserProfilePage(_currentUser));
 }

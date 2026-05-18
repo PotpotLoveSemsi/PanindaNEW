@@ -26,27 +26,28 @@
 
             <VerticalStackLayout Padding="20" Spacing="20">
 
-                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-                    <Border BackgroundColor="#A855F7" Stroke="White" StrokeThickness="1.5"
-                            Padding="12,6" StrokeShape="RoundRectangle 18">
+                <HorizontalStackLayout Spacing="12">
+                    <Border BackgroundColor="#A855F7" Stroke="White" StrokeThickness="1.5" Padding="12,6">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18"/>
+                        </Border.StrokeShape>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnBackTapped" />
                         </Border.GestureRecognizers>
-
-                        <HorizontalStackLayout Spacing="5">
-                            <Label Text="←" FontSize="16" TextColor="White" />
-                            <Label Text="Back" FontSize="14" TextColor="White" />
-                        </HorizontalStackLayout>
+                        <Label Text="← Back" TextColor="White"/>
                     </Border>
 
-                    <Label Text="ORDERS" FontSize="28" FontAttributes="Bold"
-                           TextColor="#C084FC" VerticalOptions="Center"/>
+                    <Label Text="ORDERS"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           TextColor="#C084FC"
+                           VerticalOptions="Center"/>
                 </HorizontalStackLayout>
 
                 <CollectionView x:Name="OrdersList">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border BackgroundColor="#E6E1E1" StrokeThickness="0" Padding="15" Margin="0,10">
+                            <Border BackgroundColor="#E6E1E1" StrokeThickness="0" Padding="15" Margin="0,8">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>
@@ -58,12 +59,22 @@
                                     <Label Text="{Binding ItemsSummary}" TextColor="Black"/>
                                     <Label Text="{Binding Status, StringFormat='Status: {0}'}" TextColor="Black"/>
                                     <Label Text="{Binding ETA, StringFormat='ETA: {0}'}" TextColor="Black"/>
-                                    <Label Text="{Binding TotalCost, StringFormat='Total Cost: ₱{0}'}" TextColor="Black"/>
+                                    <Label Text="{Binding TotalCost, StringFormat='Total Cost: ₱{0:N2}'}" TextColor="Black"/>
                                 </VerticalStackLayout>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
+
+                <Button x:Name="ShowMoreButton"
+                        Text="SHOW MORE"
+                        BackgroundColor="#A855F7"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="10"
+                        HeightRequest="45"
+                        IsVisible="False"
+                        Clicked="OnShowMoreClicked"/>
 
                 <Button Text="BACK TO DASHBOARD"
                         BackgroundColor="#FBBF24"

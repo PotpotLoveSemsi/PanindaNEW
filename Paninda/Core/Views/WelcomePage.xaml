@@ -3,7 +3,7 @@
              x:Class="Paninda.Core.Views.WelcomePage"
              BackgroundColor="#F5F5F5">
 
-    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+    <VerticalStackLayout Padding="30" Spacing="25" VerticalOptions="Center">
 
         <Label Text="Welcome to"
                FontSize="28"
@@ -14,22 +14,29 @@
                HeightRequest="260"
                HorizontalOptions="Center"/>
 
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+        <Border BackgroundColor="White" Padding="20" StrokeThickness="0">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="18"/>
+            </Border.StrokeShape>
 
-            <Button Text="Gumawa ng Account"
-                    Clicked="OnSignupClicked"
-                    BackgroundColor="Transparent"
-                    TextColor="#B455FF"/>
+            <VerticalStackLayout Spacing="12">
+                <Button Text="Gumawa ng Account"
+                        Clicked="OnSignupClicked"
+                        BackgroundColor="#F4A300"
+                        TextColor="Black"
+                        FontAttributes="Bold"
+                        CornerRadius="22"
+                        HeightRequest="50"/>
 
-            <Label Text="|" FontSize="20"
-                   TextColor="Black"/>
-
-            <Button Text="Mag Log-in"
-                    Clicked="OnLoginClicked"
-                    BackgroundColor="Transparent"
-                    TextColor="#B455FF"/>
-
-        </HorizontalStackLayout>
+                <Button Text="Mag Log-in"
+                        Clicked="OnLoginClicked"
+                        BackgroundColor="#B455FF"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        CornerRadius="22"
+                        HeightRequest="50"/>
+            </VerticalStackLayout>
+        </Border>
 
     </VerticalStackLayout>
 </ContentPage>

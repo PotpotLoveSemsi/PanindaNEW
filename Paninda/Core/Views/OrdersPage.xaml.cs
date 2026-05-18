@@ -6,42 +6,77 @@ namespace Paninda.Views;
 public partial class OrdersPage : ContentPage
 {
     private User _currentUser;
+    private List<OrderDisplay> _allOrders = new();
+    private bool _showingAll = false;
 
     public OrdersPage(User user)
     {
         InitializeComponent();
         _currentUser = user;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
         LoadOrders();
     }
 
     private async void LoadOrders()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
-        var displayOrders = new ObservableCollection<OrderDisplay>();
-        int counter = 1;
-        foreach (var o in orders)
-        {
-            decimal total = (o.ConfirmedPrice ?? 0) * o.Quantity; // use confirmed price if available
-            displayOrders.Add(new OrderDisplay
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+
+        _allOrders = orders
+            .OrderByDescending(o => o.OrderDate)
+            .Select((o, index) => new OrderDisplay
             {
-                OrderNumber = $"Order #{1000 + counter}",
+                OrderNumber = $"Order #{1000 + index + 1}",
                 SupplierName = o.SupplierName,
                 ItemsSummary = $"{o.ProductName} - {o.Quantity}",
                 Status = o.Status,
                 ETA = o.ETA?.ToString("MMMM dd") ?? "Pending",
-                TotalCost = total,
+                TotalCost = o.RequestedPrice ?? 0,
                 RequestedPrice = o.RequestedPrice,
                 ConfirmedPrice = o.ConfirmedPrice
-            });
-            counter++;
-        }
-        OrdersList.ItemsSource = displayOrders;
+            })
+            .ToList();
+
+        ShowLatestOnly();
     }
 
-    private async void OnBackTapped(object sender, EventArgs e) => await Navigation.PopAsync();
-    private async void OnDashboardClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
-    private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
-    private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private void ShowLatestOnly()
+    {
+        OrdersList.ItemsSource = new ObservableCollection<OrderDisplay>(_allOrders.Take(1));
+
+        ShowMoreButton.IsVisible = _allOrders.Count > 1;
+        ShowMoreButton.Text = "SHOW MORE";
+        _showingAll = false;
+    }
+
+    private void OnShowMoreClicked(object sender, EventArgs e)
+    {
+        if (_showingAll)
+        {
+            ShowLatestOnly();
+        }
+        else
+        {
+            OrdersList.ItemsSource = new ObservableCollection<OrderDisplay>(_allOrders);
+            ShowMoreButton.Text = "SHOW LESS";
+            _showingAll = true;
+        }
+    }
+
+    private async void OnBackTapped(object sender, EventArgs e) =>
+        await Navigation.PopAsync();
+
+    private async void OnDashboardClicked(object sender, EventArgs e) =>
+        await Navigation.PopToRootAsync();
+
+    private async void OnLogoClicked(object sender, EventArgs e) =>
+        await Navigation.PopToRootAsync();
+
+    private async void OnProfileClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new UserProfilePage(_currentUser));
 }
 
 public class OrderDisplay

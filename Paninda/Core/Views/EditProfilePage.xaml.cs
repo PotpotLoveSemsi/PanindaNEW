@@ -22,19 +22,32 @@ public partial class EditProfilePage : ContentPage
         AddressEntry.Text = _currentUser.Location ?? "";
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) => await Navigation.PopAsync();
-
     private async void OnSaveClicked(object sender, EventArgs e)
     {
+        if (string.IsNullOrWhiteSpace(OwnerNameEntry.Text) ||
+            string.IsNullOrWhiteSpace(EmailEntry.Text))
+        {
+            await DisplayAlert("Error", "Name and email are required.", "OK");
+            return;
+        }
+
         _currentUser.FullName = OwnerNameEntry.Text.Trim();
-        _currentUser.Email = EmailEntry.Text.Trim();
-        _currentUser.StoreName = StoreNameEntry.Text.Trim();
-        _currentUser.Phone = PhoneEntry.Text.Trim();
-        _currentUser.Location = AddressEntry.Text.Trim();
+        _currentUser.Email = EmailEntry.Text.Trim().ToLower();
+        _currentUser.StoreName = StoreNameEntry.Text?.Trim() ?? "";
+        _currentUser.Phone = PhoneEntry.Text?.Trim() ?? "";
+        _currentUser.Location = AddressEntry.Text?.Trim() ?? "";
+
         if (!string.IsNullOrWhiteSpace(PasswordEntry.Text))
             _currentUser.Password = PasswordEntry.Text;
 
-        await App.Database.UpdateUserAsync(_currentUser);
+        bool success = await App.Supabase.UpdateUserAsync(_currentUser);
+
+        if (!success)
+        {
+            await DisplayAlert("Error", "Failed to update profile.", "OK");
+            return;
+        }
+
         await DisplayAlert("Success", "Profile updated!", "OK");
         await Navigation.PopAsync();
     }

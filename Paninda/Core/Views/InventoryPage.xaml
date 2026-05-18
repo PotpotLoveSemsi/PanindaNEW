@@ -5,135 +5,97 @@
              BackgroundColor="#F2F2F2">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="15">
+        <VerticalStackLayout Spacing="20" Padding="20">
 
-            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*">
                 <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
                     </Image.GestureRecognizers>
                 </Image>
-
                 <Label Grid.Column="1" />
-
-                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
-
-                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnProfileClicked" />
-                    </Label.GestureRecognizers>
-                </Label>
             </Grid>
 
-            <VerticalStackLayout Padding="20" Spacing="18">
-
-                <!-- ✅ UPDATED BACK BUTTON -->
-                <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
-
-                    <Border BackgroundColor="#A855F7"
-                            Stroke="White"
-                            StrokeThickness="1.5"
-                            Padding="12,6"
-                            StrokeShape="RoundRectangle 18">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnBackTapped" />
-                        </Border.GestureRecognizers>
-
-                        <HorizontalStackLayout Spacing="5">
-                            <Label Text="←" FontSize="16" TextColor="White" VerticalOptions="Center" />
-                            <Label Text="Back" FontSize="14" TextColor="White" VerticalOptions="Center" />
-                        </HorizontalStackLayout>
-                    </Border>
-
-                    <Label Text="INVENTORY"
-                           FontSize="26"
-                           FontAttributes="Bold"
-                           TextColor="#B455FF" />
-
-                </HorizontalStackLayout>
-
-                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="5">
+            <HorizontalStackLayout Spacing="12">
+                <Border BackgroundColor="#A855F7" Padding="10,6">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="0" />
+                        <RoundRectangle CornerRadius="18"/>
                     </Border.StrokeShape>
-                    <Entry x:Name="SearchEntry"
-                           Placeholder="Search Item"
-                           TextColor="Black"
-                           PlaceholderColor="Gray"
-                           TextChanged="OnSearchTextChanged" />
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                    </Border.GestureRecognizers>
+                    <Label Text="← Back" TextColor="White"/>
                 </Border>
 
-                <CollectionView x:Name="ProductsCollectionView" SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <VerticalStackLayout Spacing="15">
+                <Label Text="INVENTORY"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#B455FF"/>
+            </HorizontalStackLayout>
 
-                                <Grid ColumnDefinitions="*,Auto">
-                                    <VerticalStackLayout>
-                                        <Label Text="{Binding Category}" FontSize="12" TextColor="Gray" />
-                                        <Label Text="{Binding Name}" FontSize="18" TextColor="Black" />
-                                        <Label Text="{Binding Stock, StringFormat='Stock: {0}'}" TextColor="Black" />
-                                        <Label Text="⚠ LOW STOCK"
-                                               TextColor="Red"
-                                               FontAttributes="Bold"
-                                               IsVisible="{Binding IsLowStock}" />
-                                    </VerticalStackLayout>
+            <Border BackgroundColor="White" Padding="12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="12"/>
+                </Border.StrokeShape>
+                <Entry x:Name="SearchEntry"
+                       Placeholder="Search Item"
+                       TextColor="Black"
+                       PlaceholderColor="Gray"
+                       TextChanged="OnSearchTextChanged"/>
+            </Border>
 
-                                    <Border Grid.Column="1"
-                                            BackgroundColor="#FF4D4D"
-                                            WidthRequest="35"
-                                            HeightRequest="35"
-                                            StrokeThickness="0"
-                                            Padding="5"
-                                            VerticalOptions="Center">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="20" />
-                                        </Border.StrokeShape>
+            <CollectionView x:Name="ProductsCollectionView" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White" Padding="15" Margin="0,0,0,12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14"/>
+                            </Border.StrokeShape>
 
-                                        <Label Text="🗑"
-                                               HorizontalOptions="Center"
-                                               VerticalOptions="Center"
-                                               TextColor="White" />
-                                    </Border>
-                                </Grid>
+                            <VerticalStackLayout Spacing="8">
+                                <Label Text="{Binding Category}" FontSize="12" TextColor="Gray"/>
+                                <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Text="{Binding Stock, StringFormat='Stock: {0}'}" TextColor="Black"/>
+                                <Label Text="⚠ LOW STOCK"
+                                       TextColor="Red"
+                                       FontAttributes="Bold"
+                                       IsVisible="{Binding IsLowStock}"/>
 
-                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                                    <Label Text="[ - ]" TextColor="#B455FF" FontSize="18">
+                                <HorizontalStackLayout HorizontalOptions="Center" Spacing="24">
+                                    <Label Text="−" TextColor="#B455FF" FontSize="24">
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding DecreaseStockCommand}" />
                                         </Label.GestureRecognizers>
                                     </Label>
 
-                                    <Label Text="{Binding Stock}" TextColor="#B455FF" FontSize="18" />
+                                    <Label Text="{Binding Stock}" TextColor="#B455FF" FontSize="20"/>
 
-                                    <Label Text="[ + ]" TextColor="#B455FF" FontSize="18">
+                                    <Label Text="+" TextColor="#B455FF" FontSize="24">
                                         <Label.GestureRecognizers>
                                             <TapGestureRecognizer Command="{Binding IncreaseStockCommand}" />
                                         </Label.GestureRecognizers>
                                     </Label>
                                 </HorizontalStackLayout>
-
                             </VerticalStackLayout>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-                <Button Text="+ ADD PRODUCT"
-                        BackgroundColor="#F4B400"
-                        TextColor="Black"
-                        CornerRadius="20"
-                        HeightRequest="55"
-                        Clicked="OnAddProductClicked" />
+            <Button Text="+ ADD PRODUCT"
+                    BackgroundColor="#F4B400"
+                    TextColor="Black"
+                    CornerRadius="22"
+                    HeightRequest="50"
+                    Clicked="OnAddProductClicked"/>
 
-                <Button Text="- REMOVE PRODUCT"
-                        BackgroundColor="#F4B400"
-                        TextColor="Black"
-                        CornerRadius="20"
-                        HeightRequest="55"
-                        Clicked="OnRemoveProductClicked" />
+            <Button Text="- REMOVE PRODUCT"
+                    BackgroundColor="#F4B400"
+                    TextColor="Black"
+                    CornerRadius="22"
+                    HeightRequest="50"
+                    Clicked="OnRemoveProductClicked"/>
 
-            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

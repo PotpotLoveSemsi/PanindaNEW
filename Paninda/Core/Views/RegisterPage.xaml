@@ -4,56 +4,54 @@
              BackgroundColor="#F5F5F5">
 
     <ScrollView>
-        <VerticalStackLayout Padding="25" Spacing="15">
+        <VerticalStackLayout Padding="25" Spacing="18">
 
             <Label Text="Gumawa ng Account"
-                   FontSize="28"
+                   FontSize="30"
+                   FontAttributes="Bold"
                    TextColor="#D16BA5"
                    HorizontalOptions="Center" />
 
-            <Label Text="Already Registered?"
-                   TextColor="Black"
-                   FontSize="14"
-                   HorizontalOptions="Center" />
+            <Border BackgroundColor="White" Padding="20" StrokeThickness="0">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18"/>
+                </Border.StrokeShape>
 
-            <Label Text="NAME" 
-                   TextColor="Black"/>
-            <Entry x:Name="nameEntry"
-                   Placeholder="Enter name"
-                   PlaceholderColor="DarkGray"
-                   TextColor="Black"
-                   BackgroundColor="White" />
+                <VerticalStackLayout Spacing="14">
 
-            <Label Text="EMAIL" 
-                   TextColor="Black"/>
-            <Entry x:Name="emailEntry"
-                   Placeholder="Enter email"
-                   PlaceholderColor="DarkGray"
-                   TextColor="Black"
-                   BackgroundColor="White" />
+                    <Label Text="NAME" TextColor="Black"/>
+                    <Entry x:Name="nameEntry"
+                           Placeholder="Enter name"
+                           PlaceholderColor="DarkGray"
+                           TextColor="Black"/>
 
-            <Label Text="PASSWORD" 
-                   TextColor="Black"/>
-            <Entry x:Name="passwordEntry"
-                   Placeholder="Enter password"
-                   PlaceholderColor="DarkGray"
-                   TextColor="Black"
-                   IsPassword="True"
-                   BackgroundColor="white" />
+                    <Label Text="EMAIL" TextColor="Black"/>
+                    <Entry x:Name="emailEntry"
+                           Placeholder="Enter email"
+                           PlaceholderColor="DarkGray"
+                           TextColor="Black"/>
 
-            <Label Text="DATE OF BIRTH" 
-                   TextColor="Black"/>
-            <DatePicker x:Name="dobPicker" 
-                        TextColor="Black"/>
+                    <Label Text="PASSWORD" TextColor="Black"/>
+                    <Entry x:Name="passwordEntry"
+                           Placeholder="Enter password"
+                           PlaceholderColor="DarkGray"
+                           TextColor="Black"
+                           IsPassword="True"/>
 
-            <Button Text="Sign up"
-                    BackgroundColor="#F4A300"
-                    TextColor="Black"
-                    CornerRadius="10"
-                    HeightRequest="50"
-                    Clicked="OnRegisterClicked" />
+                    <Label Text="DATE OF BIRTH" TextColor="Black"/>
+                    <DatePicker x:Name="dobPicker" TextColor="Black"/>
+
+                    <Button Text="Sign up"
+                            BackgroundColor="#F4A300"
+                            TextColor="Black"
+                            FontAttributes="Bold"
+                            CornerRadius="22"
+                            HeightRequest="50"
+                            Clicked="OnRegisterClicked"/>
+
+                </VerticalStackLayout>
+            </Border>
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

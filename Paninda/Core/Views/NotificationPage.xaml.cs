@@ -11,92 +11,57 @@ public partial class NotificationPage : ContentPage
     {
         InitializeComponent();
         _currentUser = user;
-        LoadNotifications();
     }
 
-    private async void LoadNotifications()
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadNotifications();
+    }
+
+    private async Task LoadNotifications()
     {
         var notifications = new ObservableCollection<NotificationItem>();
 
-        // 1. Low stock alerts (filter by user)
-        var products = await App.Database.GetProductsAsync(_currentUser.Id);
-        var lowStockProducts = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
-        foreach (var p in lowStockProducts)
+        var products = await App.Products.GetProductsAsync(_currentUser.Id);
+
+        foreach (var p in products.Where(p => p.Stock <= p.MinStockLevel))
         {
             notifications.Add(new NotificationItem
             {
-                Title = "⚠ Low Stock Alert",
+                Title = "⚠ Low Stock",
                 Message = $"{p.Name} only {p.Stock} left"
             });
         }
 
-        // 2. Predictive Delay Alerts (based on ETA) - ✅ filtered by user
-        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
-        var today = DateTime.Today;
-        foreach (var o in orders.Where(o => o.Status == "Pending" && o.ETA.HasValue))
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+
+        foreach (var o in orders.Where(o => o.Status == "Pending"))
         {
-            var eta = o.ETA.Value.Date;
-            if (eta < today)
+            notifications.Add(new NotificationItem
             {
-                notifications.Add(new NotificationItem
-                {
-                    Title = "⚠ Overdue Shipment",
-                    Message = $"Order from {o.SupplierName} was due on {eta:MMM dd}!"
-                });
-            }
-            else if (eta == today)
-            {
-                notifications.Add(new NotificationItem
-                {
-                    Title = "📦 Arriving Today",
-                    Message = $"Order from {o.SupplierName} is expected today!"
-                });
-            }
-            else if (eta == today.AddDays(1))
-            {
-                notifications.Add(new NotificationItem
-                {
-                    Title = "📦 Arriving Tomorrow",
-                    Message = $"Order from {o.SupplierName} will arrive tomorrow."
-                });
-            }
-            else if (eta <= today.AddDays(3))
-            {
-                notifications.Add(new NotificationItem
-                {
-                    Title = "📦 Upcoming Shipment",
-                    Message = $"Order from {o.SupplierName} arriving on {eta:MMM dd}."
-                });
-            }
+                Title = "📦 Shipment Update",
+                Message = $"{o.SupplierName} ETA {o.ETA?.ToString("MMM dd") ?? "soon"}"
+            });
         }
 
-        // 3. Other incoming shipments (without duplicates)
-        var incomingOrders = orders.Where(o => o.Status == "Pending" && (o.ETA >= today || o.ETA == null)).ToList();
-        foreach (var o in incomingOrders)
-        {
-            if (!notifications.Any(n => n.Message.Contains(o.SupplierName)))
-            {
-                notifications.Add(new NotificationItem
-                {
-                    Title = "📦 Shipment Update",
-                    Message = $"Order from {o.SupplierName} arriving {(o.ETA?.ToString("MMM dd") ?? "soon")}"
-                });
-            }
-        }
+        foreach (var n in CreateSupplierOrderPage.AppNotifications)
+            notifications.Add(n);
 
         if (notifications.Count == 0)
         {
             notifications.Add(new NotificationItem
             {
                 Title = "✨ All Good",
-                Message = "No low stock, delays, or pending shipments."
+                Message = "No notifications."
             });
         }
 
         NotificationsList.ItemsSource = notifications;
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) => await Navigation.PopAsync();
+    private async void OnBackClicked(object sender, EventArgs e) =>
+        await Navigation.PopAsync();
 }
 
 public class NotificationItem

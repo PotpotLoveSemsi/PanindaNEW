@@ -4,9 +4,18 @@ namespace Paninda.Views;
 
 public partial class LoginPage : ContentPage
 {
+    private bool _isPasswordVisible = false;
+
     public LoginPage()
     {
         InitializeComponent();
+    }
+
+    private void OnShowPasswordClicked(object sender, EventArgs e)
+    {
+        _isPasswordVisible = !_isPasswordVisible;
+        passwordEntry.IsPassword = !_isPasswordVisible;
+        ShowPasswordButton.Text = _isPasswordVisible ? "🙈" : "👁";
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)

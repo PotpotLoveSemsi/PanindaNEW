@@ -7,6 +7,8 @@ public partial class App : Application
 {
     public static AppDatabase Database { get; private set; } = null!;
     public static SupabaseService Supabase { get; private set; } = new();
+    public static SupabaseProductService Products { get; private set; } = new();
+    public static SupabaseOrderService Orders { get; private set; } = new();
 
     public App()
     {
