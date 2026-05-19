@@ -24,8 +24,8 @@ public partial class NotificationPage : ContentPage
 
     private async Task LoadNotifications()
     {
-        var products = await App.Products.GetProductsAsync(_currentUser.Id);
-        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
 
         _allPendingOrders = orders
             .Where(o => o.Status == "Pending")
@@ -87,8 +87,8 @@ public partial class NotificationPage : ContentPage
         ShowNotifications();
     }
 
-    private async void OnBackClicked(object sender, EventArgs e) =>
-        await Navigation.PopAsync();
+    private async void OnBackClicked(object sender, EventArgs e)
+        => await Navigation.PopAsync();
 }
 
 public class NotificationItem

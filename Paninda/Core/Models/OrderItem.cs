@@ -1,4 +1,5 @@
-﻿namespace Paninda.Models;
+﻿using SQLite;
+namespace Paninda.Models;
 
 public class OrderItem
 {

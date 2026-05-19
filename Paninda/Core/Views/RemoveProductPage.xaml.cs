@@ -4,8 +4,8 @@ namespace Paninda.Views;
 
 public partial class RemoveProductPage : ContentPage
 {
-    private User _currentUser;
-    private Product? _selectedProduct = null; // ✅ nullable and initialized
+    private readonly User _currentUser;
+    private Product? _selectedProduct;
 
     public RemoveProductPage(User user)
     {
@@ -21,7 +21,7 @@ public partial class RemoveProductPage : ContentPage
         ProductsListView.ItemsSource = products;
     }
 
-    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         _selectedProduct = e.CurrentSelection.FirstOrDefault() as Product;
     }
@@ -33,7 +33,9 @@ public partial class RemoveProductPage : ContentPage
             await DisplayAlert("Error", "Select a product to remove", "OK");
             return;
         }
+
         bool confirm = await DisplayAlert("Confirm", $"Remove {_selectedProduct.Name}?", "Yes", "No");
+
         if (confirm)
         {
             await App.Database.DeleteProductAsync(_selectedProduct);
@@ -42,7 +44,12 @@ public partial class RemoveProductPage : ContentPage
         }
     }
 
-    private async void OnBackTapped(object sender, EventArgs e) => await Navigation.PopAsync();
-    private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
-    private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private async void OnBackTapped(object sender, EventArgs e)
+        => await Navigation.PopAsync();
+
+    private async void OnLogoClicked(object sender, EventArgs e)
+        => await Navigation.PopToRootAsync();
+
+    private async void OnProfileClicked(object sender, EventArgs e)
+        => await Navigation.PopToRootAsync();
 }

@@ -5,9 +5,8 @@ namespace Paninda.Views;
 
 public partial class CreateSupplierOrderPage : ContentPage
 {
-    private User _currentUser;
+    private readonly User _currentUser;
     private ObservableCollection<OrderItem> _orderItems = new();
-
     private decimal _supplierQuotedPrice;
     private DateTime _eta;
     private string _selectedSupplier = "";
@@ -18,7 +17,6 @@ public partial class CreateSupplierOrderPage : ContentPage
     public CreateSupplierOrderPage(User user, List<OrderItem> selectedItems)
     {
         InitializeComponent();
-
         _currentUser = user;
         _orderItems = new ObservableCollection<OrderItem>(selectedItems);
         OrderItemsList.ItemsSource = _orderItems;
@@ -81,15 +79,7 @@ public partial class CreateSupplierOrderPage : ContentPage
                 ConfirmedPrice = null
             };
 
-            bool saved = await App.Supabase.SaveSupplierOrderAsync(supplierOrder);
-
-            if (!saved)
-            {
-                NotifyButton.IsEnabled = true;
-                NotifyButton.Text = "NOTIFY SUPPLIER";
-                await DisplayAlert("Error", "Failed to save supplier order.", "OK");
-                return;
-            }
+            await App.Database.SaveSupplierOrderAsync(supplierOrder);
         }
 
         AppNotifications.Add(new NotificationItem
@@ -111,17 +101,16 @@ public partial class CreateSupplierOrderPage : ContentPage
     private async void OnConfirmClicked(object sender, EventArgs e)
     {
         OnOrderCreated?.Invoke();
-
         await DisplayAlert("Success", "Order confirmed!", "OK");
         await Navigation.PushAsync(new OrdersPage(_currentUser));
     }
 
-    private async void OnBackTapped(object sender, EventArgs e) =>
-        await Navigation.PopAsync();
+    private async void OnBackTapped(object sender, EventArgs e)
+        => await Navigation.PopAsync();
 
-    private async void OnLogoClicked(object sender, EventArgs e) =>
-        await Navigation.PopToRootAsync();
+    private async void OnLogoClicked(object sender, EventArgs e)
+        => await Navigation.PopToRootAsync();
 
-    private async void OnProfileClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new UserProfilePage(_currentUser));
+    private async void OnProfileClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new UserProfilePage(_currentUser));
 }

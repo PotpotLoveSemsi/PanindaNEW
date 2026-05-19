@@ -30,7 +30,6 @@ public partial class DashboardPage : ContentPage
     private void SetDashboardMode()
     {
         bool isPremium = _currentUser.IsPremium;
-
         NonPremiumDashboard.IsVisible = !isPremium;
         PremiumDashboard.IsVisible = isPremium;
         PremiumIcon.IsVisible = isPremium;
@@ -55,9 +54,9 @@ public partial class DashboardPage : ContentPage
 
     private async Task LoadDashboardData()
     {
-        var products = await App.Products.GetProductsAsync(_currentUser.Id);
-        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
-        var sales = await App.Sales.GetSalesAsync(_currentUser.Id);
+        var products = await App.Database.GetProductsAsync(_currentUser.Id);
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
+        var sales = await App.Database.GetSalesAsync(_currentUser.Id);
 
         LoadNonPremiumData(products, orders);
         LoadPremiumData(products, orders, sales);
@@ -97,9 +96,7 @@ public partial class DashboardPage : ContentPage
         int lowStockCount = products.Count(p => p.Stock <= p.MinStockLevel);
         int outOfStockCount = products.Count(p => p.Stock <= 0);
 
-        var todaySales = sales
-            .Where(s => s.DateSold.Date == DateTime.Today)
-            .ToList();
+        var todaySales = sales.Where(s => s.DateSold.Date == DateTime.Today).ToList();
 
         int transactionsToday = todaySales.Sum(s => s.Quantity);
         decimal totalSales = todaySales.Sum(s => s.TotalPrice);
@@ -107,11 +104,7 @@ public partial class DashboardPage : ContentPage
 
         var topItemName = todaySales
             .GroupBy(s => s.ProductName)
-            .Select(g => new
-            {
-                ProductName = g.Key,
-                Quantity = g.Sum(s => s.Quantity)
-            })
+            .Select(g => new { ProductName = g.Key, Quantity = g.Sum(s => s.Quantity) })
             .OrderByDescending(x => x.Quantity)
             .FirstOrDefault();
 
@@ -121,18 +114,9 @@ public partial class DashboardPage : ContentPage
         PremiumLowStockAlertsLabel.Text = lowStockCount.ToString();
 
         PremiumSalesOverviewLabel.Text = $"₱{totalSales:N0}";
-
-        PremiumTopItemLabel.Text = topItemName == null
-            ? "No sales yet"
-            : $"{topItemName.ProductName}\n{topItemName.Quantity} sold today";
-
-        PremiumLowStockLabel.Text = lowStockCount == 0
-            ? "No low stock items"
-            : $"{lowStockCount} items\nNeed restocking";
-
-        PremiumRestockLabel.Text = lowStockCount == 0
-            ? "No restock needed"
-            : $"{lowStockCount} items\nView suggestions";
+        PremiumTopItemLabel.Text = topItemName == null ? "No sales yet" : $"{topItemName.ProductName}\n{topItemName.Quantity} sold today";
+        PremiumLowStockLabel.Text = lowStockCount == 0 ? "No low stock items" : $"{lowStockCount} items\nNeed restocking";
+        PremiumRestockLabel.Text = lowStockCount == 0 ? "No restock needed" : $"{lowStockCount} items\nView suggestions";
 
         PremiumTotalItemsLabel.Text = totalItems.ToString();
         PremiumInventoryLowLabel.Text = lowStockCount.ToString();
@@ -152,29 +136,14 @@ public partial class DashboardPage : ContentPage
         SalesChartView.Invalidate();
     }
 
-    private async void OnInventoryClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new InventoryPage(_currentUser));
-
-    private async void OnRestockClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new SmartRestockPage(_currentUser));
-
-    private async void OnSuppliersClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new SupplierPage(_currentUser));
-
-    private async void OnUpgradeClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new PremiumPage(_currentUser));
-
-    private async void OnLogoClicked(object sender, EventArgs e) =>
-        await Navigation.PopToRootAsync();
-
-    private async void OnProfileClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new UserProfilePage(_currentUser));
-
-    private async void OnNotificationClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new NotificationPage(_currentUser));
-
-    private async void OnSalesHistoryClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new SalesHistoryPage(_currentUser));
+    private async void OnInventoryClicked(object sender, EventArgs e) => await Navigation.PushAsync(new InventoryPage(_currentUser));
+    private async void OnRestockClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SmartRestockPage(_currentUser));
+    private async void OnSuppliersClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SupplierPage(_currentUser));
+    private async void OnUpgradeClicked(object sender, EventArgs e) => await Navigation.PushAsync(new PremiumPage(_currentUser));
+    private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
+    private async void OnProfileClicked(object sender, EventArgs e) => await Navigation.PushAsync(new UserProfilePage(_currentUser));
+    private async void OnNotificationClicked(object sender, EventArgs e) => await Navigation.PushAsync(new NotificationPage(_currentUser));
+    private async void OnSalesHistoryClicked(object sender, EventArgs e) => await Navigation.PushAsync(new SalesHistoryPage(_currentUser));
 }
 
 public class SalesChartDrawable : IDrawable
@@ -228,10 +197,8 @@ public class SalesChartDrawable : IDrawable
             float x = i * (width / (values.Count - 1));
             float y = height - ((values[i] / max) * (height - 24)) - 12;
 
-            if (i == 0)
-                path.MoveTo(x, y);
-            else
-                path.LineTo(x, y);
+            if (i == 0) path.MoveTo(x, y);
+            else path.LineTo(x, y);
         }
 
         canvas.DrawPath(path);

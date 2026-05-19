@@ -16,7 +16,7 @@ public partial class AddProductPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(NameEntry.Text))
         {
-            await DisplayAlert("Error", "Product name required", "OK");
+            await DisplayAlertAsync("Error", "Product name required", "OK");
             return;
         }
 
@@ -28,26 +28,29 @@ public partial class AddProductPage : ContentPage
             MinStockLevel = int.TryParse(MinStockEntry.Text, out var min) ? min : 5,
             SoldToday = 0,
             Price = 0,
-            UserId = _currentUser.Id
+            UserId = _currentUser.Id,
+            LastSoldDate = DateTime.Today
         };
 
-        bool success = await App.Products.SaveProductAsync(product);
+        bool success = await App.Database.SaveProductAsync(product);
 
         if (success)
         {
-            await DisplayAlert("Success", "Product added", "OK");
-
-            // 🔥 JUST GO BACK (Dashboard will auto refresh)
+            await DisplayAlertAsync("Success", "Product added", "OK");
             await Navigation.PopAsync();
         }
         else
         {
-            await DisplayAlert("Error", "Failed to save product", "OK");
+            await DisplayAlertAsync("Error", "Failed to save product", "OK");
         }
     }
 
-    private async void OnBackTapped(object sender, EventArgs e) => await Navigation.PopAsync();
-    private async void OnLogoClicked(object sender, EventArgs e) => await Navigation.PopToRootAsync();
-    private async void OnProfileClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new UserProfilePage(_currentUser));
+    private async void OnBackTapped(object sender, EventArgs e)
+        => await Navigation.PopAsync();
+
+    private async void OnLogoClicked(object sender, EventArgs e)
+        => await Navigation.PopToRootAsync();
+
+    private async void OnProfileClicked(object sender, EventArgs e)
+        => await Navigation.PushAsync(new UserProfilePage(_currentUser));
 }

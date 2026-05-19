@@ -1,10 +1,7 @@
 ﻿using SQLite;
 using Paninda.Models;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
 
-namespace Paninda;
+namespace Paninda.Database;
 
 public class AppDatabase
 {
@@ -13,26 +10,61 @@ public class AppDatabase
     public AppDatabase(string dbPath)
     {
         _database = new SQLiteAsyncConnection(dbPath);
+
         _database.CreateTableAsync<User>().Wait();
         _database.CreateTableAsync<Product>().Wait();
         _database.CreateTableAsync<SupplierOrder>().Wait();
+        _database.CreateTableAsync<Sale>().Wait();
     }
 
-    // User methods
-    public Task<int> SaveUserAsync(User user) => _database.InsertAsync(user);
-    public Task<User> GetUserByEmailAsync(string email) => _database.Table<User>().FirstOrDefaultAsync(u => u.Email == email);
-    public Task<User> GetUserByEmailAndPasswordAsync(string email, string password) => _database.Table<User>().FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
-    public Task<List<User>> GetAllUsersAsync() => _database.Table<User>().ToListAsync();
-    public Task<int> UpdateUserAsync(User user) => _database.UpdateAsync(user);
+    public Task<List<Product>> GetProductsAsync(int userId)
+    {
+        return _database.Table<Product>()
+            .Where(p => p.UserId == userId)
+            .ToListAsync();
+    }
 
-    // Product methods (filtered by user ID)
-    public Task<List<Product>> GetProductsAsync(int userId) => _database.Table<Product>().Where(p => p.UserId == userId).ToListAsync();
-    public Task<int> SaveProductAsync(Product product) => _database.InsertAsync(product);
-    public Task<int> UpdateProductAsync(Product product) => _database.UpdateAsync(product);
-    public Task<int> DeleteProductAsync(Product product) => _database.DeleteAsync(product);
+    public async Task<bool> SaveProductAsync(Product product)
+    {
+        return await _database.InsertAsync(product) > 0;
+    }
 
-    // SupplierOrder methods (filtered by user ID)
-    public Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId) => _database.Table<SupplierOrder>().Where(o => o.UserId == userId).ToListAsync();
-    public Task<int> SaveSupplierOrderAsync(SupplierOrder order) => _database.InsertAsync(order);
-    public Task<int> UpdateOrderAsync(SupplierOrder order) => _database.UpdateAsync(order);
+    public Task<int> UpdateProductAsync(Product product)
+    {
+        return _database.UpdateAsync(product);
+    }
+
+    public Task<int> DeleteProductAsync(Product product)
+    {
+        return _database.DeleteAsync(product);
+    }
+
+    public Task<int> UpdateUserAsync(User user)
+    {
+        return _database.UpdateAsync(user);
+    }
+
+    public Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId)
+    {
+        return _database.Table<SupplierOrder>()
+            .Where(o => o.UserId == userId)
+            .ToListAsync();
+    }
+
+    public Task<int> SaveSupplierOrderAsync(SupplierOrder order)
+    {
+        return _database.InsertAsync(order);
+    }
+
+    public Task<List<Sale>> GetSalesAsync(int userId)
+    {
+        return _database.Table<Sale>()
+            .Where(s => s.UserId == userId)
+            .ToListAsync();
+    }
+
+    public Task<int> SaveSaleAsync(Sale sale)
+    {
+        return _database.InsertAsync(sale);
+    }
 }
