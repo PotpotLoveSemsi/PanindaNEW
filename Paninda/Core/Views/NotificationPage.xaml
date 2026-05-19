@@ -13,7 +13,7 @@
                         <RoundRectangle CornerRadius="18"/>
                     </Border.StrokeShape>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackClicked" />
+                        <TapGestureRecognizer Tapped="OnBackClicked"/>
                     </Border.GestureRecognizers>
                     <Label Text="← Back" TextColor="White"/>
                 </Border>
@@ -24,33 +24,44 @@
                        TextColor="#E5A823"/>
             </HorizontalStackLayout>
 
+            <Label Text="Latest orders appear first"
+                   TextColor="Gray"
+                   FontSize="14"/>
+
             <CollectionView x:Name="NotificationsList">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border BackgroundColor="#EDEDED"
+                        <Border BackgroundColor="White"
                                 StrokeThickness="0"
-                                Padding="25,20"
+                                Padding="18"
                                 Margin="0,6">
-
                             <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="20"/>
+                                <RoundRectangle CornerRadius="18"/>
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Spacing="8">
                                 <Label Text="{Binding Title}"
-                                       FontSize="20"
+                                       FontSize="19"
                                        FontAttributes="Bold"
                                        TextColor="#D16BA5"/>
-
                                 <Label Text="{Binding Message}"
-                                       FontSize="16"
+                                       FontSize="15"
                                        TextColor="Black"/>
                             </VerticalStackLayout>
-
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+
+            <Button x:Name="ViewMoreButton"
+                    Text="View More"
+                    BackgroundColor="#F4B400"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    CornerRadius="20"
+                    HeightRequest="48"
+                    IsVisible="False"
+                    Clicked="OnViewMoreClicked"/>
 
         </VerticalStackLayout>
     </ScrollView>

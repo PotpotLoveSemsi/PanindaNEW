@@ -10,10 +10,10 @@
             <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*">
                 <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoClicked" />
+                        <TapGestureRecognizer Tapped="OnLogoClicked"/>
                     </Image.GestureRecognizers>
                 </Image>
-                <Label Grid.Column="1" />
+                <Label Grid.Column="1"/>
             </Grid>
 
             <HorizontalStackLayout Spacing="12">
@@ -22,7 +22,7 @@
                         <RoundRectangle CornerRadius="18"/>
                     </Border.StrokeShape>
                     <Border.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnBackTapped" />
+                        <TapGestureRecognizer Tapped="OnBackTapped"/>
                     </Border.GestureRecognizers>
                     <Label Text="← Back" TextColor="White"/>
                 </Border>
@@ -47,24 +47,30 @@
             <CollectionView x:Name="ProductsCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
+
                         <Border BackgroundColor="White" Padding="15" Margin="0,0,0,12">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="14"/>
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Spacing="8">
+
                                 <Label Text="{Binding Category}" FontSize="12" TextColor="Gray"/>
                                 <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Text="{Binding Price, StringFormat='Price: ₱{0:N2}'}" TextColor="Black"/>
                                 <Label Text="{Binding Stock, StringFormat='Stock: {0}'}" TextColor="Black"/>
+                                <Label Text="{Binding SoldToday, StringFormat='Sold Today: {0}'}" TextColor="#6D28D9"/>
+
                                 <Label Text="⚠ LOW STOCK"
                                        TextColor="Red"
                                        FontAttributes="Bold"
                                        IsVisible="{Binding IsLowStock}"/>
 
                                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="24">
+
                                     <Label Text="−" TextColor="#B455FF" FontSize="24">
                                         <Label.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding DecreaseStockCommand}" />
+                                            <TapGestureRecognizer Command="{Binding DecreaseStockCommand}"/>
                                         </Label.GestureRecognizers>
                                     </Label>
 
@@ -72,12 +78,24 @@
 
                                     <Label Text="+" TextColor="#B455FF" FontSize="24">
                                         <Label.GestureRecognizers>
-                                            <TapGestureRecognizer Command="{Binding IncreaseStockCommand}" />
+                                            <TapGestureRecognizer Command="{Binding IncreaseStockCommand}"/>
                                         </Label.GestureRecognizers>
                                     </Label>
+
                                 </HorizontalStackLayout>
+
+                                <!-- ✅ Premium only -->
+                                <Button Text="QUICK SALE"
+                                        BackgroundColor="#F4B400"
+                                        TextColor="Black"
+                                        FontAttributes="Bold"
+                                        CornerRadius="18"
+                                        Command="{Binding QuickSaleCommand}"
+                                        IsVisible="{Binding ShowQuickSale}"/>
+
                             </VerticalStackLayout>
                         </Border>
+
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

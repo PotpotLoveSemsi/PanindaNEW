@@ -107,16 +107,18 @@ public class SupabaseService
         content.Headers.ContentType =
             new System.Net.Http.Headers.MediaTypeHeaderValue("image/jpeg");
 
-        var request = new HttpRequestMessage(HttpMethod.Post, uploadUrl);
+        var request = new HttpRequestMessage(HttpMethod.Put, uploadUrl);
         request.Content = content;
-        request.Headers.Add("apikey", Key);
-        request.Headers.Add("Authorization", $"Bearer {Key}");
         request.Headers.Add("x-upsert", "true");
 
         var response = await _client.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("UPLOAD ERROR: " + error);
             return "";
+        }
 
         return $"{Url}/storage/v1/object/public/profile-images/{storagePath}";
     }

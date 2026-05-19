@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Paninda.Views.SalesHistoryPage"
+             BackgroundColor="#F2EFEF">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="18">
+
+            <HorizontalStackLayout Spacing="12">
+                <Button Text="← Back"
+                        BackgroundColor="#A855F7"
+                        TextColor="White"
+                        CornerRadius="18"
+                        Clicked="OnBackClicked"/>
+
+                <Label Text="SALES HISTORY"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       TextColor="#E5A823"/>
+            </HorizontalStackLayout>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                <Button x:Name="TodayButton" Text="Today" Clicked="OnTodayClicked"
+                        BackgroundColor="#6D28D9" TextColor="White" CornerRadius="18"/>
+                <Button x:Name="WeekButton" Grid.Column="1" Text="Week" Clicked="OnWeekClicked"
+                        BackgroundColor="White" TextColor="#6D28D9" CornerRadius="18"/>
+                <Button x:Name="MonthButton" Grid.Column="2" Text="Month" Clicked="OnMonthClicked"
+                        BackgroundColor="White" TextColor="#6D28D9" CornerRadius="18"/>
+            </Grid>
+
+            <Border BackgroundColor="White" Padding="18">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="18"/>
+                </Border.StrokeShape>
+
+                <VerticalStackLayout>
+                    <Label x:Name="FilterTitleLabel" Text="Today’s Sales" TextColor="Gray"/>
+                    <Label x:Name="TotalSalesLabel"
+                           Text="₱0"
+                           FontSize="30"
+                           FontAttributes="Bold"
+                           TextColor="#6D28D9"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <CollectionView x:Name="SalesList">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BackgroundColor="White" Padding="16" Margin="0,6">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="{Binding ProductName}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                                <Label Text="{Binding QuantityText}" TextColor="Gray"/>
+                                <Label Text="{Binding TotalText}" TextColor="#6D28D9" FontAttributes="Bold"/>
+                                <Label Text="{Binding DateText}" FontSize="12" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

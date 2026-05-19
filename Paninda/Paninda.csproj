@@ -1,14 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0-android</TargetFrameworks>
-		<TargetFrameworks Condition="!$([MSBuild]::IsOSPlatform('linux'))">
-			$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst
-		</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">
-			$(TargetFrameworks);net10.0-windows10.0.19041.0
-		</TargetFrameworks>
-
+		<TargetFrameworks>net8.0-android</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Paninda</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -21,45 +14,20 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<WindowsPackageType>None</WindowsPackageType>
-
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">15.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
-
-		<NoWarn>CS8612;CS8622;CS0618;CA1416;CA1422;CS1998;CS0168;CS0108;CS0629;CS8618;CS8602;CS8600;CS8603;CS8625;CS8604;CS8620;CS8767</NoWarn>
+		<SupportedOSPlatformVersion>21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
-	<!-- ✅ ANDROID (rounded with purple background) -->
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
-		<MauiIcon Include="Resources\AppIcon\myicon.png" BaseSize="1024,1024" Color="#A855F7" />
-	</ItemGroup>
-
-	<!-- ✅ WINDOWS (transparent logo only) -->
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
-		<MauiIcon Include="Resources\AppIcon\myicon.png" BaseSize="1024,1024" Color="#00000000" />
-	</ItemGroup>
-
-	<!-- ✅ IOS / MAC -->
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios' OR $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">
-		<MauiIcon Include="Resources\AppIcon\myicon.png" BaseSize="1024,1024" Color="#A855F7" />
-	</ItemGroup>
-
-	<!-- OTHER RESOURCES -->
 	<ItemGroup>
+		<MauiIcon Include="Resources\AppIcon\appicon.png" />
 		<MauiImage Include="Resources\Images\*" />
 		<MauiFont Include="Resources\Fonts\*" />
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+		<MauiAsset Include="Resources\Raw\**"
+				   LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
 
-	<!-- PACKAGES -->
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
-		<PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.1.10" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
 	</ItemGroup>
 
 </Project>

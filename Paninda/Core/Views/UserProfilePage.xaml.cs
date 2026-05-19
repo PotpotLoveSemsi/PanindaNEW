@@ -34,14 +34,21 @@ public partial class UserProfilePage : ContentPage
         PhoneLabel.Text = _currentUser.Phone ?? "Not set";
         LocationLabel.Text = _currentUser.Location ?? "Not set";
 
-        if (!string.IsNullOrWhiteSpace(_currentUser.ProfilePicturePath))
+        LoadProfileImage();
+    }
+
+    private void LoadProfileImage()
+    {
+        if (!string.IsNullOrWhiteSpace(_currentUser.ProfilePicturePath) &&
+            Uri.TryCreate(_currentUser.ProfilePicturePath, UriKind.Absolute, out Uri? imageUri))
         {
-            ProfileImage.Source = ImageSource.FromUri(new Uri(_currentUser.ProfilePicturePath));
+            ProfileImage.Source = ImageSource.FromUri(imageUri);
             ProfileImage.IsVisible = true;
             ProfileEmoji.IsVisible = false;
         }
         else
         {
+            ProfileImage.Source = null;
             ProfileImage.IsVisible = false;
             ProfileEmoji.IsVisible = true;
         }
@@ -71,16 +78,21 @@ public partial class UserProfilePage : ContentPage
 
             if (string.IsNullOrWhiteSpace(imageUrl))
             {
-                await DisplayAlert("Error", "Image upload failed.", "OK");
+                await DisplayAlert("Error", "Image upload failed. Check Supabase storage bucket and policy.", "OK");
                 return;
             }
 
             _currentUser.ProfilePicturePath = imageUrl;
 
-            await App.Supabase.UpdateUserAsync(_currentUser);
+            bool updated = await App.Supabase.UpdateUserAsync(_currentUser);
+
+            if (!updated)
+            {
+                await DisplayAlert("Error", "Image uploaded but profile was not updated.", "OK");
+                return;
+            }
 
             LoadUserData();
-
             await DisplayAlert("Success", "Profile picture updated.", "OK");
         }
         catch (Exception ex)

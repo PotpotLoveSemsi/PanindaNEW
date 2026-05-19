@@ -6,6 +6,9 @@ namespace Paninda.Views;
 public partial class NotificationPage : ContentPage
 {
     private User _currentUser;
+    private List<SupplierOrder> _allPendingOrders = new();
+    private List<Product> _lowStockProducts = new();
+    private bool _showAllOrders = false;
 
     public NotificationPage(User user)
     {
@@ -21,11 +24,40 @@ public partial class NotificationPage : ContentPage
 
     private async Task LoadNotifications()
     {
+        var products = await App.Products.GetProductsAsync(_currentUser.Id);
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+
+        _allPendingOrders = orders
+            .Where(o => o.Status == "Pending")
+            .OrderByDescending(o => o.OrderDate)
+            .ToList();
+
+        _lowStockProducts = products
+            .Where(p => p.Stock <= p.MinStockLevel)
+            .OrderBy(p => p.Stock)
+            .ToList();
+
+        ShowNotifications();
+    }
+
+    private void ShowNotifications()
+    {
         var notifications = new ObservableCollection<NotificationItem>();
 
-        var products = await App.Products.GetProductsAsync(_currentUser.Id);
+        var ordersToShow = _showAllOrders
+            ? _allPendingOrders
+            : _allPendingOrders.Take(3).ToList();
 
-        foreach (var p in products.Where(p => p.Stock <= p.MinStockLevel))
+        foreach (var o in ordersToShow)
+        {
+            notifications.Add(new NotificationItem
+            {
+                Title = "📦 Pending Order",
+                Message = $"{o.ProductName} from {o.SupplierName}\nDate: {o.OrderDate:MMM dd, yyyy}"
+            });
+        }
+
+        foreach (var p in _lowStockProducts)
         {
             notifications.Add(new NotificationItem
             {
@@ -33,20 +65,6 @@ public partial class NotificationPage : ContentPage
                 Message = $"{p.Name} only {p.Stock} left"
             });
         }
-
-        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
-
-        foreach (var o in orders.Where(o => o.Status == "Pending"))
-        {
-            notifications.Add(new NotificationItem
-            {
-                Title = "📦 Shipment Update",
-                Message = $"{o.SupplierName} ETA {o.ETA?.ToString("MMM dd") ?? "soon"}"
-            });
-        }
-
-        foreach (var n in CreateSupplierOrderPage.AppNotifications)
-            notifications.Add(n);
 
         if (notifications.Count == 0)
         {
@@ -58,6 +76,15 @@ public partial class NotificationPage : ContentPage
         }
 
         NotificationsList.ItemsSource = notifications;
+
+        ViewMoreButton.IsVisible = _allPendingOrders.Count > 3;
+        ViewMoreButton.Text = _showAllOrders ? "Show Less" : "View More";
+    }
+
+    private void OnViewMoreClicked(object sender, EventArgs e)
+    {
+        _showAllOrders = !_showAllOrders;
+        ShowNotifications();
     }
 
     private async void OnBackClicked(object sender, EventArgs e) =>

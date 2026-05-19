@@ -5,156 +5,325 @@
              BackgroundColor="#F5F5F5">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+        <VerticalStackLayout Padding="20" Spacing="16">
 
-            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
-                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+            <Grid BackgroundColor="White" Padding="16" ColumnDefinitions="Auto,*,Auto,Auto,Auto">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="42">
                     <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnLogoClicked" />
+                        <TapGestureRecognizer Tapped="OnLogoClicked"/>
                     </Image.GestureRecognizers>
                 </Image>
 
-                <Label Grid.Column="1" />
+                <Label x:Name="PremiumIcon"
+                       Grid.Column="2"
+                       Text="💎"
+                       FontSize="26"
+                       Margin="0,0,14,0"
+                       IsVisible="False"/>
 
-                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,12,0" TextColor="Black">
+                <Label Grid.Column="3" Text="🔔" FontSize="26" Margin="0,0,14,0">
                     <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnNotificationClicked" />
+                        <TapGestureRecognizer Tapped="OnNotificationClicked"/>
                     </Label.GestureRecognizers>
                 </Label>
 
-                <Border Grid.Column="3"
-                        WidthRequest="36"
-                        HeightRequest="36"
-                        BackgroundColor="LightGray"
-                        StrokeThickness="0">
+                <Border Grid.Column="4" WidthRequest="42" HeightRequest="42" BackgroundColor="LightGray" StrokeThickness="0">
                     <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="18"/>
+                        <RoundRectangle CornerRadius="21"/>
                     </Border.StrokeShape>
-
                     <Grid>
                         <Image x:Name="DashboardProfileImage" Aspect="AspectFill" IsVisible="False"/>
-                        <Label x:Name="DashboardProfileEmoji"
-                               Text="👤"
-                               FontSize="22"
-                               HorizontalOptions="Center"
-                               VerticalOptions="Center"/>
+                        <Label x:Name="DashboardProfileEmoji" Text="👤" FontSize="24" HorizontalOptions="Center" VerticalOptions="Center"/>
                     </Grid>
-
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnProfileClicked"/>
                     </Border.GestureRecognizers>
                 </Border>
             </Grid>
 
-            <Label Text="DAILY SUMMARY"
-                   FontSize="26"
-                   FontAttributes="Bold"
-                   TextColor="#B455FF" />
+            <VerticalStackLayout x:Name="NonPremiumDashboard" Spacing="16">
+                <Border Padding="18" StrokeThickness="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#A855F7" Offset="0"/>
+                            <GradientStop Color="#D946EF" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="DAILY SUMMARY" FontSize="24" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="Monitor your store performance today" FontSize="14" TextColor="White"/>
+                    </VerticalStackLayout>
+                </Border>
 
-            <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Top Selling Today 📈" FontAttributes="Bold" TextColor="#1C1C1C"/>
-                    <Label x:Name="TopSellingLabel" Text="Loading..." TextColor="#1C1C1C"/>
+                <VerticalStackLayout Spacing="12">
+                    <Border BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="📈 Top Selling" FontAttributes="Bold" TextColor="#6D28D9"/>
+                            <Label x:Name="TopSellingLabel" Text="Loading..." TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="⚠️ Low Stock" FontAttributes="Bold" TextColor="Red"/>
+                            <Label x:Name="LowStockLabel" Text="Loading..." TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="📦 Incoming" FontAttributes="Bold" TextColor="#6D28D9"/>
+                            <Label x:Name="IncomingLabel" Text="Loading..." TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="🔁 Restock" FontAttributes="Bold" TextColor="#009A44"/>
+                            <Label x:Name="RestockLabel" Text="Loading..." TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Border>
                 </VerticalStackLayout>
-            </Border>
 
-            <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Items Running Low ⚠️" TextColor="Red" FontAttributes="Bold"/>
-                    <Label x:Name="LowStockLabel" Text="Loading..." TextColor="#1C1C1C"/>
-                </VerticalStackLayout>
-            </Border>
+                <Border BackgroundColor="#FFF7D6" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="💎 Unlock Premium" FontSize="20" FontAttributes="Bold" TextColor="#6D28D9"/>
+                        <Label Text="Access sales history, analytics, and smart insights." TextColor="Black"/>
+                        <Button Text="Upgrade to Premium"
+                                BackgroundColor="#F4B400"
+                                TextColor="Black"
+                                FontAttributes="Bold"
+                                CornerRadius="22"
+                                HeightRequest="48"
+                                Clicked="OnUpgradeClicked"/>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
 
-            <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Incoming Shipments 📦" FontAttributes="Bold" TextColor="#1C1C1C"/>
-                    <Label x:Name="IncomingLabel" Text="Loading..." TextColor="#1C1C1C"/>
-                </VerticalStackLayout>
-            </Border>
+            <VerticalStackLayout x:Name="PremiumDashboard" IsVisible="False" Spacing="16">
+                <Border Padding="18" StrokeThickness="0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#EC4899" Offset="0"/>
+                            <GradientStop Color="#F472B6" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="18"/>
+                    </Border.StrokeShape>
+                    <Label Text="PREMIUM DASHBOARD" FontSize="26" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+                </Border>
 
-            <Border BackgroundColor="White" Padding="18" StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="Suggested Restock ⭐" FontAttributes="Bold" TextColor="#1C1C1C"/>
-                    <Label x:Name="RestockLabel" Text="Loading..." TextColor="#1C1C1C"/>
-                </VerticalStackLayout>
-            </Border>
+                <Label Text="DAILY SUMMARY" FontSize="24" FontAttributes="Bold" TextColor="#6D28D9"/>
 
-            <Border x:Name="PremiumLockedContainer"
-                    BackgroundColor="#FFF8E1"
-                    Padding="18"
-                    StrokeThickness="0">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="10">
-                    <Label Text="💎 PREMIUM INSIGHTS (Locked 🔒)" FontAttributes="Bold" TextColor="#1C1C1C"/>
-                    <Label Text="• AI Demand Forecasting" TextColor="#1C1C1C"/>
-                    <Label Text="• Advanced Sales Analytics" TextColor="#1C1C1C"/>
-                    <Label Text="• Smart Restock Optimization" TextColor="#1C1C1C"/>
-
-                    <Button Text="Upgrade to Premium"
-                            BackgroundColor="#F4B400"
-                            TextColor="Black"
-                            CornerRadius="22"
-                            HeightRequest="45"
-                            Clicked="OnUpgradeClicked"/>
-                </VerticalStackLayout>
-            </Border>
-
-            <Border x:Name="PremiumUnlockedContainer"
-                    BackgroundColor="#E8F5E9"
-                    Padding="18"
-                    StrokeThickness="0"
-                    IsVisible="False">
-                <Border.StrokeShape>
-                    <RoundRectangle CornerRadius="16"/>
-                </Border.StrokeShape>
-
-                <VerticalStackLayout Spacing="8">
-                    <Label Text="💎 PREMIUM (Active ✅)" FontAttributes="Bold" TextColor="#2E7D32"/>
-                    <Label Text="• AI Demand Forecasting – enabled" TextColor="#1C1C1C"/>
-                    <Label Text="• Advanced Sales Analytics – enabled" TextColor="#1C1C1C"/>
-                    <Label Text="• Smart Restock Optimization – enabled" TextColor="#1C1C1C"/>
-                    <Label Text="Thank you for being a Premium member!" FontSize="12" TextColor="#1C1C1C"/>
-                </VerticalStackLayout>
-            </Border>
-
-            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
-                <Button Text="INVENTORY"
-                        BackgroundColor="#F4B400"
-                        TextColor="Black"
+                <Button Text="VIEW SALES HISTORY"
+                        BackgroundColor="#6D28D9"
+                        TextColor="White"
+                        FontAttributes="Bold"
                         CornerRadius="22"
-                        HeightRequest="45"
-                        Clicked="OnInventoryClicked"/>
+                        HeightRequest="50"
+                        Clicked="OnSalesHistoryClicked"/>
 
-                <Button Text="RESTOCK"
-                        Grid.Column="1"
-                        BackgroundColor="#F4B400"
-                        TextColor="Black"
-                        CornerRadius="22"
-                        HeightRequest="45"
-                        Clicked="OnRestockClicked"/>
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                    <Border BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🛍️" FontSize="28"/>
+                            <Label Text="Total Sales" FontSize="13"/>
+                            <Label x:Name="PremiumTotalSalesLabel" Text="₱0" FontSize="22" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Border>
 
-                <Button Text="SUPPLIERS"
-                        Grid.Column="2"
-                        BackgroundColor="#F4B400"
-                        TextColor="Black"
-                        CornerRadius="22"
-                        HeightRequest="45"
-                        Clicked="OnSuppliersClicked"/>
+                    <Border Grid.Column="1" BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="🧾" FontSize="28"/>
+                            <Label Text="Transactions Today" FontSize="13"/>
+                            <Label x:Name="PremiumTransactionsLabel" Text="0" FontSize="22" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="💰" FontSize="28"/>
+                            <Label Text="Estimated Profit" FontSize="13"/>
+                            <Label x:Name="PremiumProfitLabel" Text="₱0" FontSize="22" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Grid.Row="1" Grid.Column="1" BackgroundColor="White" Padding="14">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="16"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="4" HorizontalOptions="Center">
+                            <Label Text="⚠️" FontSize="28"/>
+                            <Label Text="Low Stock Alerts" FontSize="13"/>
+                            <Label x:Name="PremiumLowStockAlertsLabel" Text="0" FontSize="22" FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </Grid>
+
+                <Border BackgroundColor="White" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Sales Overview" FontSize="22" FontAttributes="Bold"/>
+                            <Label Grid.Column="1" Text="Today" TextColor="Gray"/>
+                        </Grid>
+                        <Label x:Name="PremiumSalesOverviewLabel" Text="₱0" FontSize="32" FontAttributes="Bold"/>
+                        <Label Text="Based on today’s sales" TextColor="#00A33A"/>
+
+                        <Grid HeightRequest="170" RowDefinitions="*,Auto">
+                            <GraphicsView x:Name="SalesChartView" HeightRequest="150"/>
+                            <Grid Grid.Row="1" ColumnDefinitions="*,*,*,*,*">
+                                <Label Text="12AM" FontSize="11"/>
+                                <Label Grid.Column="1" Text="6AM" FontSize="11"/>
+                                <Label Grid.Column="2" Text="12PM" FontSize="11"/>
+                                <Label Grid.Column="3" Text="6PM" FontSize="11"/>
+                                <Label Grid.Column="4" Text="11PM" FontSize="11"/>
+                            </Grid>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="White" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="✨ AI INSIGHTS" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
+
+                        <VerticalStackLayout Spacing="10">
+                            <Border BackgroundColor="#F3E8FF" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Top Selling Item" TextColor="#6D28D9" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumTopItemLabel" Text="Loading..." FontSize="16" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border BackgroundColor="#FFF4D6" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Low Stock Items" TextColor="#C05621" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumLowStockLabel" Text="Loading..." FontSize="16" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border BackgroundColor="#E8FFF1" Padding="14">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Suggested Restock" TextColor="#009A44" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumRestockLabel" Text="Loading..." FontSize="16" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="White" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="INVENTORY OVERVIEW" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
+                            <Label Grid.Column="1" Text="View all" TextColor="#007AFF">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnInventoryClicked"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
+                            <Border BackgroundColor="White" Padding="10" Stroke="#E5E5E5">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Total" TextColor="#6D28D9" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumTotalItemsLabel" Text="0" FontSize="22" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Grid.Column="1" BackgroundColor="White" Padding="10" Stroke="#E5E5E5">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Low" TextColor="Red" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumInventoryLowLabel" Text="0" FontSize="22" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Grid.Column="2" BackgroundColor="White" Padding="10" Stroke="#E5E5E5">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="14"/>
+                                </Border.StrokeShape>
+                                <VerticalStackLayout>
+                                    <Label Text="Out" TextColor="Red" FontAttributes="Bold"/>
+                                    <Label x:Name="PremiumOutOfStockLabel" Text="0" FontSize="22" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border BackgroundColor="White" Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="10">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="RECENT ACTIVITY" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
+                            <Label Grid.Column="1" Text="View all" TextColor="#007AFF">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnSuppliersClicked"/>
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+                        <Label x:Name="PremiumActivityLabel" Text="Loading..."/>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+                <Button Text="INVENTORY" BackgroundColor="#F4B400" TextColor="Black" FontAttributes="Bold" CornerRadius="22" Clicked="OnInventoryClicked"/>
+                <Button Grid.Column="1" Text="RESTOCK" BackgroundColor="#F4B400" TextColor="Black" FontAttributes="Bold" CornerRadius="22" Clicked="OnRestockClicked"/>
+                <Button Grid.Column="2" Text="SUPPLIERS" BackgroundColor="#F4B400" TextColor="Black" FontAttributes="Bold" CornerRadius="22" Clicked="OnSuppliersClicked"/>
             </Grid>
 
         </VerticalStackLayout>
