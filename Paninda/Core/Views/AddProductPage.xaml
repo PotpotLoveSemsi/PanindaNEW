@@ -37,8 +37,8 @@
                         </Border.GestureRecognizers>
 
                         <HorizontalStackLayout Spacing="5">
-                            <Label Text="←" FontSize="16" TextColor="White" VerticalOptions="Center" />
-                            <Label Text="Back" FontSize="14" TextColor="White" VerticalOptions="Center" />
+                            <Label Text="←" FontSize="16" TextColor="White" />
+                            <Label Text="Back" FontSize="14" TextColor="White" />
                         </HorizontalStackLayout>
                     </Border>
 
@@ -80,6 +80,22 @@
                     <Entry x:Name="MinStockEntry" Keyboard="Numeric" Text="5" TextColor="Black" Placeholder="5" PlaceholderColor="Gray" />
                 </Border>
 
+                <Label Text="Selling Price" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="PriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 25" PlaceholderColor="Gray" />
+                </Border>
+
+                <Label Text="Cost Price / Puhunan" TextColor="Black" />
+                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="10" />
+                    </Border.StrokeShape>
+                    <Entry x:Name="CostPriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 15" PlaceholderColor="Gray" />
+                </Border>
+
                 <Button Text="SAVE PRODUCT"
                         BackgroundColor="#F4B400"
                         TextColor="Black"
@@ -90,5 +106,4 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

@@ -11,25 +11,32 @@ public partial class OrderHistoryPage : ContentPage
     {
         InitializeComponent();
         _currentUser = user;
-        LoadOrders();
     }
 
-    private async void LoadOrders()
+    protected override async void OnAppearing()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
+        base.OnAppearing();
+        await LoadOrders();
+    }
 
-        var displayOrders = new ObservableCollection<OrderDisplay>();
+    private async Task LoadOrders()
+    {
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+
+        var displayOrders = new ObservableCollection<OrderHistoryDisplay>();
         int counter = 1;
 
-        foreach (var o in orders)
+        foreach (var o in orders.OrderByDescending(x => x.OrderDate))
         {
-            displayOrders.Add(new OrderDisplay
+            decimal price = o.ConfirmedPrice ?? o.RequestedPrice ?? 0;
+
+            displayOrders.Add(new OrderHistoryDisplay
             {
                 OrderNumber = $"Order #{1000 + counter}",
                 SupplierName = o.SupplierName,
                 ItemsSummary = $"{o.ProductName} - {o.Quantity}",
                 Status = o.Status,
-                TotalCost = o.Quantity * 20
+                TotalCost = o.Quantity * price
             });
 
             counter++;
@@ -40,4 +47,13 @@ public partial class OrderHistoryPage : ContentPage
 
     private async void OnBackClicked(object sender, EventArgs e)
         => await Navigation.PopAsync();
+}
+
+public class OrderHistoryDisplay
+{
+    public string OrderNumber { get; set; } = string.Empty;
+    public string SupplierName { get; set; } = string.Empty;
+    public string ItemsSummary { get; set; } = string.Empty;
+    public string Status { get; set; } = string.Empty;
+    public decimal TotalCost { get; set; }
 }

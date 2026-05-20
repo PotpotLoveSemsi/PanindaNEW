@@ -13,13 +13,13 @@ public class Product
     public string Category { get; set; } = string.Empty;
 
     public decimal Price { get; set; }
+    public decimal CostPrice { get; set; }
 
     public int Stock { get; set; }
     public int Quantity { get; set; }
     public int MinStockLevel { get; set; }
-
     public int SoldToday { get; set; }
-    public DateTime LastSoldDate { get; set; } = DateTime.Today;
 
+    public DateTime LastSoldDate { get; set; } = DateTime.Today;
     public DateTime DateAdded { get; set; } = DateTime.Now;
 }

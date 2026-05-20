@@ -98,6 +98,7 @@ public class ProductViewModel : INotifyPropertyChanged
     public string Name => _product.Name;
     public string Category => _product.Category;
     public decimal Price => _product.Price;
+    public decimal CostPrice => _product.CostPrice;
 
     public int Stock
     {
@@ -133,6 +134,7 @@ public class ProductViewModel : INotifyPropertyChanged
         if (newStock < 0) return;
 
         Stock = newStock;
+
         await App.Database.UpdateProductAsync(_product);
         await _onStockChanged();
     }
@@ -179,6 +181,7 @@ public class ProductViewModel : INotifyPropertyChanged
             ProductName = _product.Name,
             Quantity = quantity,
             TotalPrice = quantity * _product.Price,
+            Profit = quantity * (_product.Price - _product.CostPrice),
             DateSold = DateTime.Now,
             UserId = _product.UserId
         };

@@ -16,7 +16,7 @@ public partial class AddProductPage : ContentPage
     {
         if (string.IsNullOrWhiteSpace(NameEntry.Text))
         {
-            await DisplayAlertAsync("Error", "Product name required", "OK");
+            await DisplayAlert("Error", "Product name required", "OK");
             return;
         }
 
@@ -26,8 +26,9 @@ public partial class AddProductPage : ContentPage
             Category = CategoryEntry.Text?.Trim() ?? "General",
             Stock = int.TryParse(StockEntry.Text, out var stock) ? stock : 0,
             MinStockLevel = int.TryParse(MinStockEntry.Text, out var min) ? min : 5,
+            Price = decimal.TryParse(PriceEntry.Text, out var price) ? price : 0,
+            CostPrice = decimal.TryParse(CostPriceEntry.Text, out var cost) ? cost : 0,
             SoldToday = 0,
-            Price = 0,
             UserId = _currentUser.Id,
             LastSoldDate = DateTime.Today
         };
@@ -36,12 +37,12 @@ public partial class AddProductPage : ContentPage
 
         if (success)
         {
-            await DisplayAlertAsync("Success", "Product added", "OK");
+            await DisplayAlert("Success", "Product added", "OK");
             await Navigation.PopAsync();
         }
         else
         {
-            await DisplayAlertAsync("Error", "Failed to save product", "OK");
+            await DisplayAlert("Error", "Failed to save product", "OK");
         }
     }
 

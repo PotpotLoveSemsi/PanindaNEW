@@ -24,7 +24,7 @@ public partial class RegisterPage : ContentPage
             FullName = nameEntry.Text.Trim(),
             Email = emailEntry.Text.Trim().ToLower(),
             Password = passwordEntry.Text,
-            DateOfBirth = dobPicker.Date ?? DateTime.Today,
+            DateOfBirth = dobPicker.Date, // ✅ FIXED HERE
             StoreName = "",
             Phone = "",
             Location = "",
@@ -41,7 +41,7 @@ public partial class RegisterPage : ContentPage
         }
         else
         {
-            await DisplayAlert("Error", "Failed to create account. Check Supabase table/RLS.", "OK");
+            await DisplayAlert("Error", "Failed to create account.", "OK");
         }
     }
 }

@@ -100,7 +100,7 @@ public partial class DashboardPage : ContentPage
 
         int transactionsToday = todaySales.Sum(s => s.Quantity);
         decimal totalSales = todaySales.Sum(s => s.TotalPrice);
-        decimal estimatedProfit = totalSales * 0.35m;
+        decimal estimatedProfit = todaySales.Sum(s => s.Profit);
 
         var topItemName = todaySales
             .GroupBy(s => s.ProductName)

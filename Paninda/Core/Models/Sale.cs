@@ -11,7 +11,9 @@ public class Sale
     public string ProductName { get; set; } = string.Empty;
 
     public int Quantity { get; set; }
+
     public decimal TotalPrice { get; set; }
+    public decimal Profit { get; set; }
 
     public DateTime DateSold { get; set; }
 
