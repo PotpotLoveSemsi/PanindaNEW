@@ -13,6 +13,8 @@ public class Sale
     public int Quantity { get; set; }
 
     public decimal TotalPrice { get; set; }
+
+    // ✅ Accurate profit per sale
     public decimal Profit { get; set; }
 
     public DateTime DateSold { get; set; }

@@ -171,6 +171,10 @@ public class ProductViewModel : INotifyPropertyChanged
             return;
         }
 
+        // ✅ FINAL ACCURATE PROFIT
+        decimal totalPrice = quantity * _product.Price;
+        decimal profit = (_product.Price - _product.CostPrice) * quantity;
+
         _product.Stock -= quantity;
         _product.SoldToday += quantity;
         _product.LastSoldDate = DateTime.Today;
@@ -180,8 +184,8 @@ public class ProductViewModel : INotifyPropertyChanged
             ProductId = _product.Id,
             ProductName = _product.Name,
             Quantity = quantity,
-            TotalPrice = quantity * _product.Price,
-            Profit = quantity * (_product.Price - _product.CostPrice),
+            TotalPrice = totalPrice,
+            Profit = profit,
             DateSold = DateTime.Now,
             UserId = _product.UserId
         };
