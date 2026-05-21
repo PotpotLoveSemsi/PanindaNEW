@@ -7,6 +7,7 @@ public partial class CreateSupplierOrderPage : ContentPage
 {
     private readonly User _currentUser;
     private ObservableCollection<OrderItem> _orderItems = new();
+
     private decimal _supplierQuotedPrice;
     private DateTime _eta;
     private string _selectedSupplier = "";
@@ -17,8 +18,10 @@ public partial class CreateSupplierOrderPage : ContentPage
     public CreateSupplierOrderPage(User user, List<OrderItem> selectedItems)
     {
         InitializeComponent();
+
         _currentUser = user;
         _orderItems = new ObservableCollection<OrderItem>(selectedItems);
+
         OrderItemsList.ItemsSource = _orderItems;
     }
 
@@ -64,6 +67,30 @@ public partial class CreateSupplierOrderPage : ContentPage
         _supplierQuotedPrice = Math.Round(totalQuantity * basePrice * 1.10m, 2);
         _eta = DateTime.Now.AddDays(new Random().Next(2, 6));
 
+        DeliveryDateLabel.Text = _eta.ToString("MMMM dd");
+        GeneratedPriceLabel.Text = $"Price: ₱{_supplierQuotedPrice:N2}";
+        GeneratedEtaLabel.Text = $"Delivery: {_eta:MMMM dd}";
+
+        NotifyButton.IsVisible = false;
+        PriceEntryContainer.IsVisible = true;
+
+        AppNotifications.Add(new NotificationItem
+        {
+            Title = "📦 Supplier Response",
+            Message = $"{_selectedSupplier} quoted ₱{_supplierQuotedPrice:N2}\nETA: {_eta:MMMM dd}"
+        });
+
+        await DisplayAlert("Done", "Supplier responded successfully.", "OK");
+    }
+
+    private async void OnConfirmClicked(object sender, EventArgs e)
+    {
+        if (_orderItems.Count == 0)
+        {
+            await DisplayAlert("Error", "No items selected to order.", "OK");
+            return;
+        }
+
         foreach (var item in _orderItems)
         {
             var supplierOrder = new SupplierOrder
@@ -72,35 +99,18 @@ public partial class CreateSupplierOrderPage : ContentPage
                 ProductName = item.Name,
                 Quantity = item.Quantity,
                 OrderDate = DateTime.Now,
-                Status = "Pending",
+                Status = "Confirmed",
                 ETA = _eta,
                 UserId = _currentUser.Id,
                 RequestedPrice = _supplierQuotedPrice,
-                ConfirmedPrice = null
+                ConfirmedPrice = _supplierQuotedPrice
             };
 
             await App.Database.SaveSupplierOrderAsync(supplierOrder);
         }
 
-        AppNotifications.Add(new NotificationItem
-        {
-            Title = "📦 Supplier Response",
-            Message = $"{_selectedSupplier} quoted ₱{_supplierQuotedPrice:N2}\nETA: {_eta:MMMM dd}"
-        });
-
-        DeliveryDateLabel.Text = _eta.ToString("MMMM dd");
-        GeneratedPriceLabel.Text = $"Price: ₱{_supplierQuotedPrice:N2}";
-        GeneratedEtaLabel.Text = $"Delivery: {_eta:MMMM dd}";
-
-        NotifyButton.IsVisible = false;
-        PriceEntryContainer.IsVisible = true;
-
-        await DisplayAlert("Done", "Supplier responded successfully.", "OK");
-    }
-
-    private async void OnConfirmClicked(object sender, EventArgs e)
-    {
         OnOrderCreated?.Invoke();
+
         await DisplayAlert("Success", "Order confirmed!", "OK");
         await Navigation.PushAsync(new OrdersPage(_currentUser));
     }

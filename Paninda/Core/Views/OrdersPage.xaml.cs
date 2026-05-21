@@ -23,7 +23,7 @@ public partial class OrdersPage : ContentPage
 
     private async void LoadOrders()
     {
-        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
 
         _allOrders = orders
             .OrderByDescending(o => o.OrderDate)

@@ -21,7 +21,7 @@ public partial class OrderHistoryPage : ContentPage
 
     private async Task LoadOrders()
     {
-        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
+        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
 
         var displayOrders = new ObservableCollection<OrderHistoryDisplay>();
         int counter = 1;
