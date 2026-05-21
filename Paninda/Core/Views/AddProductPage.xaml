@@ -15,9 +15,17 @@
                 </Image>
 
                 <Label Grid.Column="1" />
-                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
 
-                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
+                <Label Grid.Column="2"
+                       Text="🔔"
+                       FontSize="24"
+                       Margin="0,0,10,0"
+                       TextColor="Black" />
+
+                <Label Grid.Column="3"
+                       Text="👤"
+                       FontSize="24"
+                       TextColor="Black">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnProfileClicked" />
                     </Label.GestureRecognizers>
@@ -53,7 +61,10 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="NameEntry" TextColor="Black" Placeholder="Enter product name" PlaceholderColor="Gray" />
+                    <Entry x:Name="NameEntry"
+                           TextColor="Black"
+                           Placeholder="Enter product name"
+                           PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Category" TextColor="Black" />
@@ -61,7 +72,10 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="CategoryEntry" TextColor="Black" Placeholder="e.g., Food, Drink" PlaceholderColor="Gray" />
+                    <Entry x:Name="CategoryEntry"
+                           TextColor="Black"
+                           Placeholder="e.g., Food, Drink"
+                           PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Initial Stock" TextColor="Black" />
@@ -69,7 +83,11 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="StockEntry" Keyboard="Numeric" TextColor="Black" Placeholder="0" PlaceholderColor="Gray" />
+                    <Entry x:Name="StockEntry"
+                           Keyboard="Numeric"
+                           TextColor="Black"
+                           Placeholder="0"
+                           PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Minimum Stock Level" TextColor="Black" />
@@ -77,24 +95,39 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="MinStockEntry" Keyboard="Numeric" Text="5" TextColor="Black" Placeholder="5" PlaceholderColor="Gray" />
+                    <Entry x:Name="MinStockEntry"
+                           Keyboard="Numeric"
+                           Text="5"
+                           TextColor="Black"
+                           Placeholder="5"
+                           PlaceholderColor="Gray" />
                 </Border>
 
-                <Label Text="Selling Price" TextColor="Black" />
-                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="PriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 25" PlaceholderColor="Gray" />
-                </Border>
+                <VerticalStackLayout x:Name="PremiumPriceSection" Spacing="18">
+                    <Label Text="Selling Price" TextColor="Black" />
+                    <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Entry x:Name="PriceEntry"
+                               Keyboard="Numeric"
+                               TextColor="Black"
+                               Placeholder="e.g., 25"
+                               PlaceholderColor="Gray" />
+                    </Border>
 
-                <Label Text="Cost Price / Puhunan" TextColor="Black" />
-                <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
-                    <Border.StrokeShape>
-                        <RoundRectangle CornerRadius="10" />
-                    </Border.StrokeShape>
-                    <Entry x:Name="CostPriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 15" PlaceholderColor="Gray" />
-                </Border>
+                    <Label Text="Cost Price / Puhunan" TextColor="Black" />
+                    <Border BackgroundColor="White" StrokeThickness="1" Stroke="#CCCCCC" Padding="10">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10" />
+                        </Border.StrokeShape>
+                        <Entry x:Name="CostPriceEntry"
+                               Keyboard="Numeric"
+                               TextColor="Black"
+                               Placeholder="e.g., 15"
+                               PlaceholderColor="Gray" />
+                    </Border>
+                </VerticalStackLayout>
 
                 <Button Text="SAVE PRODUCT"
                         BackgroundColor="#F4B400"

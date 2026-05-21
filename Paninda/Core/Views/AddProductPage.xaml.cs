@@ -10,6 +10,8 @@ public partial class AddProductPage : ContentPage
     {
         InitializeComponent();
         _currentUser = user;
+
+        PremiumPriceSection.IsVisible = _currentUser.IsPremium;
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -20,14 +22,23 @@ public partial class AddProductPage : ContentPage
             return;
         }
 
+        decimal price = 0;
+        decimal cost = 0;
+
+        if (_currentUser.IsPremium)
+        {
+            price = decimal.TryParse(PriceEntry.Text, out var parsedPrice) ? parsedPrice : 0;
+            cost = decimal.TryParse(CostPriceEntry.Text, out var parsedCost) ? parsedCost : 0;
+        }
+
         var product = new Product
         {
             Name = NameEntry.Text.Trim(),
             Category = CategoryEntry.Text?.Trim() ?? "General",
             Stock = int.TryParse(StockEntry.Text, out var stock) ? stock : 0,
             MinStockLevel = int.TryParse(MinStockEntry.Text, out var min) ? min : 5,
-            Price = decimal.TryParse(PriceEntry.Text, out var price) ? price : 0,
-            CostPrice = decimal.TryParse(CostPriceEntry.Text, out var cost) ? cost : 0,
+            Price = price,
+            CostPrice = cost,
             SoldToday = 0,
             UserId = _currentUser.Id,
             LastSoldDate = DateTime.Today
