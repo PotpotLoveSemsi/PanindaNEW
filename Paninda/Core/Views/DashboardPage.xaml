@@ -218,7 +218,7 @@
                         <RoundRectangle CornerRadius="16"/>
                     </Border.StrokeShape>
                     <VerticalStackLayout Spacing="12">
-                        <Label Text="✨ AI INSIGHTS" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
+                        <Label Text="✨ INSIGHTS" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
 
                         <VerticalStackLayout Spacing="10">
                             <Border BackgroundColor="#F3E8FF" Padding="14">

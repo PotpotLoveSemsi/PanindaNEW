@@ -146,7 +146,10 @@ public class SupabaseService
             stock = product.Stock,
             quantity = product.Quantity,
             soldtoday = product.SoldToday,
-            lastsolddate = product.LastSoldDate
+            lastsolddate = product.LastSoldDate,
+            price = product.Price,
+            costprice = product.CostPrice,
+            category = product.Category
         };
 
         var request = new HttpRequestMessage(
@@ -183,14 +186,14 @@ public class SupabaseService
                 UserId = p.GetProperty("userid").GetInt32(),
                 Name = p.GetProperty("name").GetString() ?? "",
                 Category = p.GetProperty("category").GetString() ?? "General",
-                Price = p.GetProperty("price").GetDecimal(),
-                CostPrice = p.GetProperty("costprice").GetDecimal(),
+                Price = p.TryGetProperty("price", out var price) && price.ValueKind != JsonValueKind.Null ? price.GetDecimal() : 0,
+                CostPrice = p.TryGetProperty("costprice", out var cost) && cost.ValueKind != JsonValueKind.Null ? cost.GetDecimal() : 0,
                 Stock = p.GetProperty("stock").GetInt32(),
                 Quantity = p.GetProperty("quantity").GetInt32(),
                 MinStockLevel = p.GetProperty("minstocklevel").GetInt32(),
                 SoldToday = p.GetProperty("soldtoday").GetInt32(),
-                LastSoldDate = p.GetProperty("lastsolddate").GetDateTime(),
-                DateAdded = p.GetProperty("dateadded").GetDateTime()
+                LastSoldDate = p.TryGetProperty("lastsolddate", out var lastSold) && lastSold.ValueKind != JsonValueKind.Null ? lastSold.GetDateTime() : DateTime.Today,
+                DateAdded = p.TryGetProperty("dateadded", out var dateAdded) && dateAdded.ValueKind != JsonValueKind.Null ? dateAdded.GetDateTime() : DateTime.Today
             });
         }
 
@@ -210,15 +213,7 @@ public class SupabaseService
         };
 
         var response = await _client.PostAsJsonAsync($"{Url}/rest/v1/sales", data);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            await Application.Current.MainPage.DisplayAlert("Supabase Error", error, "OK");
-            return false;
-        }
-
-        return true;
+        return response.IsSuccessStatusCode;
     }
 
     public async Task<List<Sale>> GetSalesAsync(int userId)
@@ -268,29 +263,17 @@ public class SupabaseService
         };
 
         var response = await _client.PostAsJsonAsync($"{Url}/rest/v1/supplierorders", data);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            await Application.Current.MainPage.DisplayAlert("Supplier Order Error", error, "OK");
-            return false;
-        }
-
-        return true;
+        return response.IsSuccessStatusCode;
     }
 
     public async Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId)
     {
         var response = await _client.GetAsync(
-            $"{Url}/rest/v1/supplierorders?select=*"
+            $"{Url}/rest/v1/supplierorders?userid=eq.{userId}&select=*"
         );
 
         if (!response.IsSuccessStatusCode)
-        {
-            var error = await response.Content.ReadAsStringAsync();
-            await Application.Current.MainPage.DisplayAlert("Load Orders Error", error, "OK");
             return new List<SupplierOrder>();
-        }
 
         var json = await response.Content.ReadAsStringAsync();
         var arr = JsonDocument.Parse(json).RootElement;
@@ -307,10 +290,10 @@ public class SupabaseService
                 Quantity = o.GetProperty("quantity").GetInt32(),
                 OrderDate = o.GetProperty("orderdate").GetDateTime(),
                 Status = o.GetProperty("status").GetString() ?? "Pending",
-                ETA = o.TryGetProperty("eta", out var eta) && eta.ValueKind != JsonValueKind.Null
-                    ? eta.GetDateTime()
-                    : null,
-                UserId = o.GetProperty("userid").GetInt32()
+                ETA = o.TryGetProperty("eta", out var eta) && eta.ValueKind != JsonValueKind.Null ? eta.GetDateTime() : null,
+                UserId = o.GetProperty("userid").GetInt32(),
+                RequestedPrice = o.TryGetProperty("requestedprice", out var requested) && requested.ValueKind != JsonValueKind.Null ? requested.GetDecimal() : null,
+                ConfirmedPrice = o.TryGetProperty("confirmedprice", out var confirmed) && confirmed.ValueKind != JsonValueKind.Null ? confirmed.GetDecimal() : null
             });
         }
 

@@ -47,31 +47,34 @@
             <CollectionView x:Name="ProductsCollectionView" SelectionMode="None">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-
                         <Border BackgroundColor="White" Padding="15" Margin="0,0,0,12">
                             <Border.StrokeShape>
                                 <RoundRectangle CornerRadius="14"/>
                             </Border.StrokeShape>
 
                             <VerticalStackLayout Spacing="8">
-
                                 <Label Text="{Binding Category}" FontSize="12" TextColor="Gray"/>
                                 <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
-
                                 <Label Text="{Binding Stock, StringFormat='Stock: {0}'}" TextColor="Black"/>
                                 <Label Text="{Binding SoldToday, StringFormat='Sold Today: {0}'}" TextColor="#6D28D9"/>
 
-                                <!-- ✅ PREMIUM ONLY PRICE -->
                                 <Label Text="{Binding Price, StringFormat='Price: ₱{0:F2}'}"
                                        TextColor="Green"
                                        FontAttributes="Bold"
-                                       IsVisible="{Binding ShowQuickSale}" />
+                                       IsVisible="{Binding ShowQuickSale}"/>
 
                                 <Label Text="{Binding CostPrice, StringFormat='Cost: ₱{0:F2}'}"
                                        TextColor="Gray"
-                                       IsVisible="{Binding ShowQuickSale}" />
+                                       IsVisible="{Binding ShowQuickSale}"/>
 
-                                <!-- LOW STOCK -->
+                                <Button Text="EDIT PRICE / COST"
+                                        BackgroundColor="#A855F7"
+                                        TextColor="White"
+                                        FontAttributes="Bold"
+                                        CornerRadius="18"
+                                        Command="{Binding EditPriceCostCommand}"
+                                        IsVisible="{Binding ShowQuickSale}"/>
+
                                 <Label Text="⚠ LOW STOCK"
                                        TextColor="Red"
                                        FontAttributes="Bold"
@@ -93,7 +96,6 @@
                                     </Label>
                                 </HorizontalStackLayout>
 
-                                <!-- QUICK SALE -->
                                 <Button Text="QUICK SALE"
                                         BackgroundColor="#F4B400"
                                         TextColor="Black"
@@ -101,10 +103,8 @@
                                         CornerRadius="18"
                                         Command="{Binding QuickSaleCommand}"
                                         IsVisible="{Binding ShowQuickSale}"/>
-
                             </VerticalStackLayout>
                         </Border>
-
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

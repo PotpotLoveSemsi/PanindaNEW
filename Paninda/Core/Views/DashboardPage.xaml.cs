@@ -69,10 +69,9 @@ public partial class DashboardPage : ContentPage
         var lowStock = products.Where(p => p.Stock <= p.MinStockLevel).ToList();
 
         var incoming = orders
-            .Where(o => o.Status == "Pending")
-            .OrderByDescending(o => o.OrderDate)
-            .Take(3)
-            .ToList();
+    .OrderByDescending(o => o.OrderDate)
+    .Take(3)
+    .ToList();
 
         TopSellingLabel.Text = topSelling.Any(p => p.SoldToday > 0)
             ? string.Join("\n", topSelling.Where(p => p.SoldToday > 0).Select(p => $"• {p.Name} – {p.SoldToday} sold"))

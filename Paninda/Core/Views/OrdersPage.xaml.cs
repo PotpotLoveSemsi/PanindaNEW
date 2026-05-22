@@ -15,15 +15,15 @@ public partial class OrdersPage : ContentPage
         _currentUser = user;
     }
 
-    protected override void OnAppearing()
+    protected override async void OnAppearing()
     {
         base.OnAppearing();
-        LoadOrders();
+        await LoadOrders();
     }
 
-    private async void LoadOrders()
+    private async Task LoadOrders()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
 
         _allOrders = orders
             .OrderByDescending(o => o.OrderDate)
@@ -34,7 +34,7 @@ public partial class OrdersPage : ContentPage
                 ItemsSummary = $"{o.ProductName} - {o.Quantity}",
                 Status = o.Status,
                 ETA = o.ETA?.ToString("MMMM dd") ?? "Pending",
-                TotalCost = o.RequestedPrice ?? 0,
+                TotalCost = o.ConfirmedPrice ?? o.RequestedPrice ?? 0,
                 RequestedPrice = o.RequestedPrice,
                 ConfirmedPrice = o.ConfirmedPrice
             })
@@ -45,6 +45,7 @@ public partial class OrdersPage : ContentPage
 
     private void ShowLatestOnly()
     {
+        OrdersList.ItemsSource = null;
         OrdersList.ItemsSource = new ObservableCollection<OrderDisplay>(_allOrders.Take(1));
 
         ShowMoreButton.IsVisible = _allOrders.Count > 1;
@@ -54,6 +55,8 @@ public partial class OrdersPage : ContentPage
 
     private void OnShowMoreClicked(object sender, EventArgs e)
     {
+        OrdersList.ItemsSource = null;
+
         if (_showingAll)
         {
             ShowLatestOnly();

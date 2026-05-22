@@ -39,6 +39,7 @@ public partial class InventoryPage : ContentPage
             ));
         }
 
+        ProductsCollectionView.ItemsSource = null;
         ProductsCollectionView.ItemsSource = _products;
     }
 
@@ -80,6 +81,7 @@ public class ProductViewModel : INotifyPropertyChanged
         IncreaseStockCommand = new Command(async () => await ChangeStock(1));
         DecreaseStockCommand = new Command(async () => await ChangeStock(-1));
         QuickSaleCommand = new Command(async () => await QuickSale());
+        EditPriceCostCommand = new Command(async () => await EditPriceCost());
     }
 
     public string Name => _product.Name;
@@ -114,13 +116,25 @@ public class ProductViewModel : INotifyPropertyChanged
     public ICommand IncreaseStockCommand { get; }
     public ICommand DecreaseStockCommand { get; }
     public ICommand QuickSaleCommand { get; }
+    public ICommand EditPriceCostCommand { get; }
 
     private async Task ChangeStock(int delta)
     {
         int newStock = Stock + delta;
-        if (newStock < 0) return;
+
+        if (newStock < 0)
+        {
+            await _page.DisplayAlert("Out of Stock", "No stock left.", "OK");
+            return;
+        }
 
         Stock = newStock;
+
+        if (delta < 0)
+        {
+            SoldToday += 1;
+            _product.LastSoldDate = DateTime.Today;
+        }
 
         bool updated = await App.Supabase.UpdateProductAsync(_product);
 
@@ -130,6 +144,50 @@ public class ProductViewModel : INotifyPropertyChanged
             return;
         }
 
+        await _onStockChanged();
+    }
+
+    private async Task EditPriceCost()
+    {
+        string priceInput = await _page.DisplayPromptAsync(
+            "Edit Price",
+            $"Enter selling price for {Name}:",
+            "Save",
+            "Cancel",
+            "Price",
+            keyboard: Keyboard.Numeric);
+
+        if (string.IsNullOrWhiteSpace(priceInput)) return;
+
+        string costInput = await _page.DisplayPromptAsync(
+            "Edit Cost",
+            $"Enter cost price for {Name}:",
+            "Save",
+            "Cancel",
+            "Cost",
+            keyboard: Keyboard.Numeric);
+
+        if (string.IsNullOrWhiteSpace(costInput)) return;
+
+        if (!decimal.TryParse(priceInput, out decimal price) ||
+            !decimal.TryParse(costInput, out decimal cost))
+        {
+            await _page.DisplayAlert("Invalid", "Enter valid numbers.", "OK");
+            return;
+        }
+
+        _product.Price = price;
+        _product.CostPrice = cost;
+
+        bool updated = await App.Supabase.UpdateProductAsync(_product);
+
+        if (!updated)
+        {
+            await _page.DisplayAlert("Error", "Price and cost did not update.", "OK");
+            return;
+        }
+
+        await _page.DisplayAlert("Success", "Price and cost updated.", "OK");
         await _onStockChanged();
     }
 
@@ -184,24 +242,18 @@ public class ProductViewModel : INotifyPropertyChanged
         };
 
         bool saleSaved = await App.Supabase.SaveSaleAsync(sale);
-
         if (!saleSaved)
         {
-            await _page.DisplayAlert("Error", "Sale did not save to Supabase.", "OK");
+            await _page.DisplayAlert("Error", "Sale did not save.", "OK");
             return;
         }
 
         bool productUpdated = await App.Supabase.UpdateProductAsync(_product);
-
         if (!productUpdated)
         {
-            await _page.DisplayAlert("Error", "Product stock did not update.", "OK");
+            await _page.DisplayAlert("Error", "Product did not update.", "OK");
             return;
         }
-
-        OnPropertyChanged(nameof(Stock));
-        OnPropertyChanged(nameof(SoldToday));
-        OnPropertyChanged(nameof(IsLowStock));
 
         await _page.DisplayAlert("Success", "Sale saved.", "OK");
         await _onStockChanged();

@@ -7,27 +7,28 @@
     <ScrollView>
         <VerticalStackLayout Spacing="15">
 
-            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
-                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
+            <Grid BackgroundColor="#D9D9D9"
+                  Padding="15"
+                  ColumnDefinitions="Auto,*">
+
+                <Image Grid.Column="0"
+                       Source="logo.png"
+                       HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
                     </Image.GestureRecognizers>
                 </Image>
 
                 <Label Grid.Column="1" />
-                <Label Grid.Column="2" Text="🔔" FontSize="24" Margin="0,0,10,0" TextColor="Black" />
-
-                <Label Grid.Column="3" Text="👤" FontSize="24" TextColor="Black">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnProfileClicked" />
-                    </Label.GestureRecognizers>
-                </Label>
             </Grid>
 
             <VerticalStackLayout Padding="20" Spacing="20">
 
                 <HorizontalStackLayout Spacing="12">
-                    <Border BackgroundColor="#A855F7" Stroke="White" StrokeThickness="1.5" Padding="12,6">
+                    <Border BackgroundColor="#A855F7"
+                            Stroke="White"
+                            StrokeThickness="1.5"
+                            Padding="12,6">
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="18"/>
                         </Border.StrokeShape>
@@ -47,7 +48,10 @@
                 <CollectionView x:Name="OrdersList">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border BackgroundColor="#E6E1E1" StrokeThickness="0" Padding="15" Margin="0,8">
+                            <Border BackgroundColor="#E6E1E1"
+                                    StrokeThickness="0"
+                                    Padding="15"
+                                    Margin="0,8">
                                 <Border.StrokeShape>
                                     <RoundRectangle CornerRadius="20" />
                                 </Border.StrokeShape>

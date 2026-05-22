@@ -82,8 +82,6 @@
             <VerticalStackLayout Spacing="8">
                 <Label Text="Account" FontAttributes="Bold" TextColor="Black"/>
 
-                <Label Text="Settings" TextColor="Black"/>
-
                 <Label Text="Edit Profile" TextColor="#C86DD7">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnEditProfile"/>

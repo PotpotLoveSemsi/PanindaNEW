@@ -21,9 +21,10 @@ public partial class OrderHistoryPage : ContentPage
 
     private async Task LoadOrders()
     {
-        var orders = await App.Database.GetSupplierOrdersAsync(_currentUser.Id);
+        var orders = await App.Supabase.GetSupplierOrdersAsync(_currentUser.Id);
 
         var displayOrders = new ObservableCollection<OrderHistoryDisplay>();
+
         int counter = 1;
 
         foreach (var o in orders.OrderByDescending(x => x.OrderDate))
@@ -36,24 +37,27 @@ public partial class OrderHistoryPage : ContentPage
                 SupplierName = o.SupplierName,
                 ItemsSummary = $"{o.ProductName} - {o.Quantity}",
                 Status = o.Status,
-                TotalCost = o.Quantity * price
+                TotalCost = price
             });
 
             counter++;
         }
 
+        OrdersHistoryList.ItemsSource = null;
         OrdersHistoryList.ItemsSource = displayOrders;
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
-        => await Navigation.PopAsync();
+    {
+        await Navigation.PopAsync();
+    }
 }
 
 public class OrderHistoryDisplay
 {
-    public string OrderNumber { get; set; } = string.Empty;
-    public string SupplierName { get; set; } = string.Empty;
-    public string ItemsSummary { get; set; } = string.Empty;
-    public string Status { get; set; } = string.Empty;
+    public string OrderNumber { get; set; } = "";
+    public string SupplierName { get; set; } = "";
+    public string ItemsSummary { get; set; } = "";
+    public string Status { get; set; } = "";
     public decimal TotalCost { get; set; }
 }
