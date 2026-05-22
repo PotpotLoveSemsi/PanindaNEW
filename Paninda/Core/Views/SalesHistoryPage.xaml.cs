@@ -23,7 +23,7 @@ public partial class SalesHistoryPage : ContentPage
 
     private async Task LoadSales()
     {
-        _allSales = await App.Sales.GetSalesAsync(_currentUser.Id);
+        _allSales = await App.Supabase.GetSalesAsync(_currentUser.Id);
     }
 
     private void ShowToday()

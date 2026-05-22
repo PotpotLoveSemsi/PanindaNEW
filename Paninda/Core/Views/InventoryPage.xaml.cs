@@ -25,17 +25,7 @@ public partial class InventoryPage : ContentPage
 
     private async Task LoadProducts()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id);
-
-        foreach (var product in products)
-        {
-            if (product.LastSoldDate.Date < DateTime.Today)
-            {
-                product.SoldToday = 0;
-                product.LastSoldDate = DateTime.Today;
-                await App.Database.UpdateProductAsync(product);
-            }
-        }
+        var products = await App.Supabase.GetProductsAsync(_currentUser.Id);
 
         _products.Clear();
 
@@ -45,11 +35,8 @@ public partial class InventoryPage : ContentPage
                 p,
                 this,
                 _currentUser.IsPremium,
-                async () =>
-                {
-                    await App.Database.UpdateProductAsync(p);
-                    await LoadProducts();
-                }));
+                async () => await LoadProducts()
+            ));
         }
 
         ProductsCollectionView.ItemsSource = _products;
@@ -64,17 +51,17 @@ public partial class InventoryPage : ContentPage
             : _products.Where(p => p.Name.ToLower().Contains(searchText)).ToList();
     }
 
-    private async void OnAddProductClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(new AddProductPage(_currentUser));
+    private async void OnAddProductClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new AddProductPage(_currentUser));
 
-    private async void OnRemoveProductClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(new RemoveProductPage(_currentUser));
+    private async void OnRemoveProductClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new RemoveProductPage(_currentUser));
 
-    private async void OnBackTapped(object sender, EventArgs e)
-        => await Navigation.PopAsync();
+    private async void OnBackTapped(object sender, EventArgs e) =>
+        await Navigation.PopAsync();
 
-    private async void OnLogoClicked(object sender, EventArgs e)
-        => await Navigation.PopToRootAsync();
+    private async void OnLogoClicked(object sender, EventArgs e) =>
+        await Navigation.PopToRootAsync();
 }
 
 public class ProductViewModel : INotifyPropertyChanged
@@ -135,7 +122,14 @@ public class ProductViewModel : INotifyPropertyChanged
 
         Stock = newStock;
 
-        await App.Database.UpdateProductAsync(_product);
+        bool updated = await App.Supabase.UpdateProductAsync(_product);
+
+        if (!updated)
+        {
+            await _page.DisplayAlert("Error", "Product stock did not update.", "OK");
+            return;
+        }
+
         await _onStockChanged();
     }
 
@@ -171,7 +165,6 @@ public class ProductViewModel : INotifyPropertyChanged
             return;
         }
 
-        // ✅ FINAL ACCURATE PROFIT
         decimal totalPrice = quantity * _product.Price;
         decimal profit = (_product.Price - _product.CostPrice) * quantity;
 
@@ -190,18 +183,32 @@ public class ProductViewModel : INotifyPropertyChanged
             UserId = _product.UserId
         };
 
-        await App.Database.SaveSaleAsync(sale);
-        await App.Database.UpdateProductAsync(_product);
+        bool saleSaved = await App.Supabase.SaveSaleAsync(sale);
+
+        if (!saleSaved)
+        {
+            await _page.DisplayAlert("Error", "Sale did not save to Supabase.", "OK");
+            return;
+        }
+
+        bool productUpdated = await App.Supabase.UpdateProductAsync(_product);
+
+        if (!productUpdated)
+        {
+            await _page.DisplayAlert("Error", "Product stock did not update.", "OK");
+            return;
+        }
 
         OnPropertyChanged(nameof(Stock));
         OnPropertyChanged(nameof(SoldToday));
         OnPropertyChanged(nameof(IsLowStock));
 
+        await _page.DisplayAlert("Success", "Sale saved.", "OK");
         await _onStockChanged();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected void OnPropertyChanged([CallerMemberName] string? name = null)
-        => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    protected void OnPropertyChanged([CallerMemberName] string? name = null) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }

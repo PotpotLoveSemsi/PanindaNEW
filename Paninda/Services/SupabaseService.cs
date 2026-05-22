@@ -113,14 +113,143 @@ public class SupabaseService
 
         var response = await _client.SendAsync(request);
 
+        return response.IsSuccessStatusCode
+            ? $"{Url}/storage/v1/object/public/profile-images/{storagePath}"
+            : "";
+    }
+
+    public async Task<bool> SaveProductAsync(Product product)
+    {
+        var data = new
+        {
+            userid = product.UserId,
+            name = product.Name,
+            category = product.Category,
+            price = product.Price,
+            costprice = product.CostPrice,
+            stock = product.Stock,
+            quantity = product.Quantity,
+            minstocklevel = product.MinStockLevel,
+            soldtoday = product.SoldToday,
+            lastsolddate = product.LastSoldDate,
+            dateadded = product.DateAdded
+        };
+
+        var response = await _client.PostAsJsonAsync($"{Url}/rest/v1/products", data);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> UpdateProductAsync(Product product)
+    {
+        var data = new
+        {
+            stock = product.Stock,
+            quantity = product.Quantity,
+            soldtoday = product.SoldToday,
+            lastsolddate = product.LastSoldDate
+        };
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Patch,
+            $"{Url}/rest/v1/products?id=eq.{product.Id}"
+        );
+
+        request.Content = JsonContent.Create(data);
+        request.Headers.Add("Prefer", "return=minimal");
+
+        var response = await _client.SendAsync(request);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<List<Product>> GetProductsAsync(int userId)
+    {
+        var response = await _client.GetAsync(
+            $"{Url}/rest/v1/products?userid=eq.{userId}&select=*"
+        );
+
+        if (!response.IsSuccessStatusCode)
+            return new List<Product>();
+
+        var json = await response.Content.ReadAsStringAsync();
+        var arr = JsonDocument.Parse(json).RootElement;
+
+        var products = new List<Product>();
+
+        foreach (var p in arr.EnumerateArray())
+        {
+            products.Add(new Product
+            {
+                Id = p.GetProperty("id").GetInt32(),
+                UserId = p.GetProperty("userid").GetInt32(),
+                Name = p.GetProperty("name").GetString() ?? "",
+                Category = p.GetProperty("category").GetString() ?? "General",
+                Price = p.GetProperty("price").GetDecimal(),
+                CostPrice = p.GetProperty("costprice").GetDecimal(),
+                Stock = p.GetProperty("stock").GetInt32(),
+                Quantity = p.GetProperty("quantity").GetInt32(),
+                MinStockLevel = p.GetProperty("minstocklevel").GetInt32(),
+                SoldToday = p.GetProperty("soldtoday").GetInt32(),
+                LastSoldDate = p.GetProperty("lastsolddate").GetDateTime(),
+                DateAdded = p.GetProperty("dateadded").GetDateTime()
+            });
+        }
+
+        return products;
+    }
+
+    public async Task<bool> SaveSaleAsync(Sale sale)
+    {
+        var data = new
+        {
+            userid = sale.UserId,
+            productname = sale.ProductName,
+            quantity = sale.Quantity,
+            totalprice = sale.TotalPrice,
+            profit = sale.Profit,
+            datesold = sale.DateSold
+        };
+
+        var response = await _client.PostAsJsonAsync($"{Url}/rest/v1/sales", data);
+
         if (!response.IsSuccessStatusCode)
         {
             var error = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("UPLOAD ERROR: " + error);
-            return "";
+            await Application.Current.MainPage.DisplayAlert("Supabase Error", error, "OK");
+            return false;
         }
 
-        return $"{Url}/storage/v1/object/public/profile-images/{storagePath}";
+        return true;
+    }
+
+    public async Task<List<Sale>> GetSalesAsync(int userId)
+    {
+        var response = await _client.GetAsync(
+            $"{Url}/rest/v1/sales?userid=eq.{userId}&select=*"
+        );
+
+        if (!response.IsSuccessStatusCode)
+            return new List<Sale>();
+
+        var json = await response.Content.ReadAsStringAsync();
+        var arr = JsonDocument.Parse(json).RootElement;
+
+        var sales = new List<Sale>();
+
+        foreach (var s in arr.EnumerateArray())
+        {
+            sales.Add(new Sale
+            {
+                Id = s.GetProperty("id").GetInt32(),
+                UserId = s.GetProperty("userid").GetInt32(),
+                ProductName = s.GetProperty("productname").GetString() ?? "",
+                Quantity = s.GetProperty("quantity").GetInt32(),
+                TotalPrice = s.GetProperty("totalprice").GetDecimal(),
+                Profit = s.GetProperty("profit").GetDecimal(),
+                DateSold = s.GetProperty("datesold").GetDateTime()
+            });
+        }
+
+        return sales;
     }
 
     public async Task<bool> SaveSupplierOrderAsync(SupplierOrder order)
@@ -139,17 +268,29 @@ public class SupabaseService
         };
 
         var response = await _client.PostAsJsonAsync($"{Url}/rest/v1/supplierorders", data);
-        return response.IsSuccessStatusCode;
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            await Application.Current.MainPage.DisplayAlert("Supplier Order Error", error, "OK");
+            return false;
+        }
+
+        return true;
     }
 
     public async Task<List<SupplierOrder>> GetSupplierOrdersAsync(int userId)
     {
         var response = await _client.GetAsync(
-            $"{Url}/rest/v1/supplierorders?userid=eq.{userId}&select=*"
+            $"{Url}/rest/v1/supplierorders?select=*"
         );
 
         if (!response.IsSuccessStatusCode)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            await Application.Current.MainPage.DisplayAlert("Load Orders Error", error, "OK");
             return new List<SupplierOrder>();
+        }
 
         var json = await response.Content.ReadAsStringAsync();
         var arr = JsonDocument.Parse(json).RootElement;
@@ -166,10 +307,10 @@ public class SupabaseService
                 Quantity = o.GetProperty("quantity").GetInt32(),
                 OrderDate = o.GetProperty("orderdate").GetDateTime(),
                 Status = o.GetProperty("status").GetString() ?? "Pending",
-                ETA = o.TryGetProperty("eta", out var eta) && eta.ValueKind != JsonValueKind.Null ? eta.GetDateTime() : null,
-                UserId = o.GetProperty("userid").GetInt32(),
-                RequestedPrice = o.TryGetProperty("requestedprice", out var rp) && rp.ValueKind != JsonValueKind.Null ? rp.GetDecimal() : null,
-                ConfirmedPrice = o.TryGetProperty("confirmedprice", out var cp) && cp.ValueKind != JsonValueKind.Null ? cp.GetDecimal() : null
+                ETA = o.TryGetProperty("eta", out var eta) && eta.ValueKind != JsonValueKind.Null
+                    ? eta.GetDateTime()
+                    : null,
+                UserId = o.GetProperty("userid").GetInt32()
             });
         }
 

@@ -31,7 +31,7 @@ public partial class SmartRestockPage : ContentPage
 
     private async Task LoadSuggestions()
     {
-        var products = await App.Database.GetProductsAsync(_currentUser.Id);
+        var products = await App.Supabase.GetProductsAsync(_currentUser.Id);
         _suggestions.Clear();
 
         foreach (var p in products.Where(p => p.Stock <= p.MinStockLevel))

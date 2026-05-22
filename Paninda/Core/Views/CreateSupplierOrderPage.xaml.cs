@@ -12,22 +12,15 @@ public partial class CreateSupplierOrderPage : ContentPage
     private DateTime _eta;
     private string _selectedSupplier = "";
 
-    public static event Action? OnOrderCreated;
-    public static List<NotificationItem> AppNotifications = new();
-
     public CreateSupplierOrderPage(User user, List<OrderItem> selectedItems)
     {
         InitializeComponent();
-
         _currentUser = user;
         _orderItems = new ObservableCollection<OrderItem>(selectedItems);
-
         OrderItemsList.ItemsSource = _orderItems;
     }
 
-    public CreateSupplierOrderPage(User user) : this(user, new List<OrderItem>())
-    {
-    }
+    public CreateSupplierOrderPage(User user) : this(user, new List<OrderItem>()) { }
 
     private void OnSupplierSelected(object sender, EventArgs e)
     {
@@ -74,12 +67,6 @@ public partial class CreateSupplierOrderPage : ContentPage
         NotifyButton.IsVisible = false;
         PriceEntryContainer.IsVisible = true;
 
-        AppNotifications.Add(new NotificationItem
-        {
-            Title = "📦 Supplier Response",
-            Message = $"{_selectedSupplier} quoted ₱{_supplierQuotedPrice:N2}\nETA: {_eta:MMMM dd}"
-        });
-
         await DisplayAlert("Done", "Supplier responded successfully.", "OK");
     }
 
@@ -106,21 +93,26 @@ public partial class CreateSupplierOrderPage : ContentPage
                 ConfirmedPrice = _supplierQuotedPrice
             };
 
-            await App.Database.SaveSupplierOrderAsync(supplierOrder);
+            bool saved = await App.Supabase.SaveSupplierOrderAsync(supplierOrder);
+
+            if (!saved)
+            {
+                await DisplayAlert("Error", "Order failed to save.", "OK");
+                return;
+            }
         }
 
-        OnOrderCreated?.Invoke();
-
         await DisplayAlert("Success", "Order confirmed!", "OK");
+
         await Navigation.PushAsync(new OrdersPage(_currentUser));
     }
 
-    private async void OnBackTapped(object sender, EventArgs e)
-        => await Navigation.PopAsync();
+    private async void OnBackTapped(object sender, EventArgs e) =>
+        await Navigation.PopAsync();
 
-    private async void OnLogoClicked(object sender, EventArgs e)
-        => await Navigation.PopToRootAsync();
+    private async void OnLogoClicked(object sender, EventArgs e) =>
+        await Navigation.PopToRootAsync();
 
-    private async void OnProfileClicked(object sender, EventArgs e)
-        => await Navigation.PushAsync(new UserProfilePage(_currentUser));
+    private async void OnProfileClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new UserProfilePage(_currentUser));
 }

@@ -44,7 +44,7 @@ public partial class AddProductPage : ContentPage
             LastSoldDate = DateTime.Today
         };
 
-        bool success = await App.Database.SaveProductAsync(product);
+        bool success = await App.Supabase.SaveProductAsync(product);
 
         if (success)
         {
