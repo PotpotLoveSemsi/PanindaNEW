@@ -19,7 +19,8 @@ public partial class UserProfilePage : ContentPage
     {
         base.OnAppearing();
 
-        var updatedUser = await App.Supabase.GetUserByEmailAsync(_currentUser.Email);
+        var updatedUser = await App.Supabase.GetUserByIdAsync(_currentUser.Id);
+
         if (updatedUser != null)
             _currentUser = updatedUser;
 
@@ -29,10 +30,21 @@ public partial class UserProfilePage : ContentPage
 
     private void LoadUserData()
     {
-        OwnerNameLabel.Text = _currentUser.FullName;
-        StoreNameLabel.Text = _currentUser.StoreName ?? "My Store";
-        PhoneLabel.Text = _currentUser.Phone ?? "Not set";
-        LocationLabel.Text = _currentUser.Location ?? "Not set";
+        OwnerNameLabel.Text = string.IsNullOrWhiteSpace(_currentUser.FullName)
+            ? "Not set"
+            : _currentUser.FullName;
+
+        StoreNameLabel.Text = string.IsNullOrWhiteSpace(_currentUser.StoreName)
+            ? "My Store"
+            : _currentUser.StoreName;
+
+        PhoneLabel.Text = string.IsNullOrWhiteSpace(_currentUser.Phone)
+            ? "Not set"
+            : _currentUser.Phone;
+
+        LocationLabel.Text = string.IsNullOrWhiteSpace(_currentUser.Location)
+            ? "Not set"
+            : _currentUser.Location;
 
         LoadProfileImage();
     }
@@ -72,13 +84,13 @@ public partial class UserProfilePage : ContentPage
             if (result == null) return;
 
             using var stream = await result.OpenReadAsync();
-
             string fileName = $"user_{_currentUser.Id}_{Guid.NewGuid()}.jpg";
+
             string imageUrl = await App.Supabase.UploadProfileImageAsync(stream, fileName);
 
             if (string.IsNullOrWhiteSpace(imageUrl))
             {
-                await DisplayAlert("Error", "Image upload failed. Check Supabase storage bucket and policy.", "OK");
+                await DisplayAlert("Error", "Image upload failed. Check Supabase storage policy.", "OK");
                 return;
             }
 
@@ -88,7 +100,7 @@ public partial class UserProfilePage : ContentPage
 
             if (!updated)
             {
-                await DisplayAlert("Error", "Image uploaded but profile was not updated.", "OK");
+                await DisplayAlert("Error", "Profile picture was not saved.", "OK");
                 return;
             }
 
@@ -97,7 +109,7 @@ public partial class UserProfilePage : ContentPage
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Error", "Could not update image: " + ex.Message, "OK");
+            await DisplayAlert("Error", ex.Message, "OK");
         }
     }
 
@@ -116,7 +128,6 @@ public partial class UserProfilePage : ContentPage
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
         bool confirm = await DisplayAlert("Logout", "Are you sure?", "Yes", "No");
-
         if (confirm)
             Application.Current.MainPage = new NavigationPage(new LoginPage());
     }

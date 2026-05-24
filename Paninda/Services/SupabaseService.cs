@@ -72,6 +72,22 @@ public class SupabaseService
         return ParseUser(arr[0]);
     }
 
+    public async Task<User?> GetUserByIdAsync(int userId)
+    {
+        var response = await _client.GetAsync(
+            $"{Url}/rest/v1/users?id=eq.{userId}&select=*"
+        );
+
+        if (!response.IsSuccessStatusCode) return null;
+
+        var json = await response.Content.ReadAsStringAsync();
+        var arr = JsonDocument.Parse(json).RootElement;
+
+        if (arr.GetArrayLength() == 0) return null;
+
+        return ParseUser(arr[0]);
+    }
+
     public async Task<bool> UpdateUserAsync(User user)
     {
         var data = new
@@ -308,10 +324,10 @@ public class SupabaseService
             FullName = u.GetProperty("fullname").GetString() ?? "",
             Email = u.GetProperty("email").GetString() ?? "",
             Password = u.GetProperty("password").GetString() ?? "",
-            StoreName = u.GetProperty("storename").GetString(),
-            Phone = u.GetProperty("phone").GetString(),
-            Location = u.GetProperty("location").GetString(),
-            ProfilePicturePath = u.GetProperty("profilepicturepath").GetString(),
+            StoreName = u.GetProperty("storename").GetString() ?? "",
+            Phone = u.GetProperty("phone").GetString() ?? "",
+            Location = u.GetProperty("location").GetString() ?? "",
+            ProfilePicturePath = u.GetProperty("profilepicturepath").GetString() ?? "",
             IsPremium = u.GetProperty("ispremium").GetBoolean()
         };
     }

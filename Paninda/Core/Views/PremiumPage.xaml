@@ -42,11 +42,11 @@
                            FontAttributes="Bold"
                            TextColor="#A855F7"/>
 
-                    <Label Text="🤖 AI Demand Forecasting" TextColor="Black"/>
-                    <Label Text="📊 Advanced Sales Analytics" TextColor="Black"/>
+                    <Label Text="📊 Sales Insights" TextColor="Black"/>
                     <Label Text="💰 Profit Tracking" TextColor="Black"/>
-                    <Label Text="📦 Smart Restock Optimization" TextColor="Black"/>
-                    <Label Text="✨ Premium Dashboard UI" TextColor="Black"/>
+                    <Label Text="⚠ Low Stock Alerts" TextColor="Black"/>
+                    <Label Text="📦 Inventory Monitoring" TextColor="Black"/>
+                    <Label Text="✨ Enhanced Dashboard UI" TextColor="Black"/>
                 </VerticalStackLayout>
             </Border>
 

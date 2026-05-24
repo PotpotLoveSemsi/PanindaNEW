@@ -7,13 +7,8 @@
     <ScrollView>
         <VerticalStackLayout Spacing="15">
 
-            <Grid BackgroundColor="#D9D9D9"
-                  Padding="15"
-                  ColumnDefinitions="Auto,*">
-
-                <Image Grid.Column="0"
-                       Source="logo.png"
-                       HeightRequest="35">
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*">
+                <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
                     </Image.GestureRecognizers>
@@ -90,4 +85,5 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+
 </ContentPage>

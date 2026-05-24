@@ -16,10 +16,10 @@ public partial class EditProfilePage : ContentPage
     private void LoadCurrentData()
     {
         OwnerNameEntry.Text = _currentUser.FullName;
+        StoreNameEntry.Text = _currentUser.StoreName;
+        PhoneEntry.Text = _currentUser.Phone;
+        AddressEntry.Text = _currentUser.Location;
         EmailEntry.Text = _currentUser.Email;
-        StoreNameEntry.Text = _currentUser.StoreName ?? "";
-        PhoneEntry.Text = _currentUser.Phone ?? "";
-        AddressEntry.Text = _currentUser.Location ?? "";
     }
 
     private async void OnSaveClicked(object sender, EventArgs e)
@@ -32,13 +32,13 @@ public partial class EditProfilePage : ContentPage
         }
 
         _currentUser.FullName = OwnerNameEntry.Text.Trim();
-        _currentUser.Email = EmailEntry.Text.Trim().ToLower();
         _currentUser.StoreName = StoreNameEntry.Text?.Trim() ?? "";
         _currentUser.Phone = PhoneEntry.Text?.Trim() ?? "";
         _currentUser.Location = AddressEntry.Text?.Trim() ?? "";
+        _currentUser.Email = EmailEntry.Text.Trim().ToLower();
 
         if (!string.IsNullOrWhiteSpace(PasswordEntry.Text))
-            _currentUser.Password = PasswordEntry.Text;
+            _currentUser.Password = PasswordEntry.Text.Trim();
 
         bool success = await App.Supabase.UpdateUserAsync(_currentUser);
 
