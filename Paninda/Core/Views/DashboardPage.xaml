@@ -311,7 +311,7 @@
                             <Label Text="RECENT ACTIVITY" FontSize="22" FontAttributes="Bold" TextColor="#6D28D9"/>
                             <Label Grid.Column="1" Text="View all" TextColor="#007AFF">
                                 <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnSuppliersClicked"/>
+                                    <TapGestureRecognizer Tapped="OnSalesHistoryClicked"/>
                                 </Label.GestureRecognizers>
                             </Label>
                         </Grid>

@@ -39,7 +39,6 @@ public partial class InventoryPage : ContentPage
             ));
         }
 
-        ProductsCollectionView.ItemsSource = null;
         ProductsCollectionView.ItemsSource = _products;
     }
 
@@ -55,8 +54,52 @@ public partial class InventoryPage : ContentPage
     private async void OnAddProductClicked(object sender, EventArgs e) =>
         await Navigation.PushAsync(new AddProductPage(_currentUser));
 
-    private async void OnRemoveProductClicked(object sender, EventArgs e) =>
-        await Navigation.PushAsync(new RemoveProductPage(_currentUser));
+    private async void OnRemoveProductClicked(object sender, EventArgs e)
+    {
+        if (_products.Count == 0)
+        {
+            await DisplayAlert("No Products", "There are no products to remove.", "OK");
+            return;
+        }
+
+        string selected = await DisplayActionSheet(
+            "Select product to remove",
+            "Cancel",
+            null,
+            _products.Select(p => p.Name).ToArray()
+        );
+
+        if (selected == "Cancel" || string.IsNullOrWhiteSpace(selected))
+            return;
+
+        var productVm = _products.FirstOrDefault(p => p.Name == selected);
+
+        if (productVm == null)
+            return;
+
+        bool confirm = await DisplayAlert(
+            "Remove Product",
+            $"Are you sure you want to remove {productVm.Name}?",
+            "Yes",
+            "No"
+        );
+
+        if (!confirm)
+            return;
+
+        bool deleted = await App.Supabase.DeleteProductAsync(productVm.Id);
+
+        if (!deleted)
+        {
+            await DisplayAlert("Error", "Product was not removed.", "OK");
+            return;
+        }
+
+        _products.Remove(productVm);
+        ProductsCollectionView.ItemsSource = _products;
+
+        await DisplayAlert("Success", "Product removed.", "OK");
+    }
 
     private async void OnBackTapped(object sender, EventArgs e) =>
         await Navigation.PopAsync();
@@ -84,6 +127,7 @@ public class ProductViewModel : INotifyPropertyChanged
         EditPriceCostCommand = new Command(async () => await EditPriceCost());
     }
 
+    public int Id => _product.Id;
     public string Name => _product.Name;
     public string Category => _product.Category;
     public decimal Price => _product.Price;
@@ -141,32 +185,15 @@ public class ProductViewModel : INotifyPropertyChanged
         if (!updated)
         {
             await _page.DisplayAlert("Error", "Product stock did not update.", "OK");
-            return;
         }
-
-        await _onStockChanged();
     }
 
     private async Task EditPriceCost()
     {
-        string priceInput = await _page.DisplayPromptAsync(
-            "Edit Price",
-            $"Enter selling price for {Name}:",
-            "Save",
-            "Cancel",
-            "Price",
-            keyboard: Keyboard.Numeric);
-
+        string priceInput = await _page.DisplayPromptAsync("Edit Price", $"Enter selling price for {Name}:", "Save", "Cancel", "Price", keyboard: Keyboard.Numeric);
         if (string.IsNullOrWhiteSpace(priceInput)) return;
 
-        string costInput = await _page.DisplayPromptAsync(
-            "Edit Cost",
-            $"Enter cost price for {Name}:",
-            "Save",
-            "Cancel",
-            "Cost",
-            keyboard: Keyboard.Numeric);
-
+        string costInput = await _page.DisplayPromptAsync("Edit Cost", $"Enter cost price for {Name}:", "Save", "Cancel", "Cost", keyboard: Keyboard.Numeric);
         if (string.IsNullOrWhiteSpace(costInput)) return;
 
         if (!decimal.TryParse(priceInput, out decimal price) ||
@@ -201,14 +228,7 @@ public class ProductViewModel : INotifyPropertyChanged
             return;
         }
 
-        string result = await _page.DisplayPromptAsync(
-            "Quick Sale",
-            $"Enter quantity for {Name}:",
-            "Confirm",
-            "Cancel",
-            "Quantity",
-            keyboard: Keyboard.Numeric);
-
+        string result = await _page.DisplayPromptAsync("Quick Sale", $"Enter quantity for {Name}:", "Confirm", "Cancel", "Quantity", keyboard: Keyboard.Numeric);
         if (string.IsNullOrWhiteSpace(result)) return;
 
         if (!int.TryParse(result, out int quantity) || quantity <= 0)

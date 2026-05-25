@@ -17,6 +17,8 @@ public class SupabaseService
         _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Key}");
     }
 
+    // ================= USER =================
+
     public async Task<bool> RegisterUserAsync(User user)
     {
         var data = new
@@ -114,6 +116,8 @@ public class SupabaseService
         return response.IsSuccessStatusCode;
     }
 
+    // ================= PROFILE IMAGE =================
+
     public async Task<string> UploadProfileImageAsync(Stream imageStream, string fileName)
     {
         string storagePath = $"profiles/{fileName}";
@@ -133,6 +137,8 @@ public class SupabaseService
             ? $"{Url}/storage/v1/object/public/profile-images/{storagePath}"
             : "";
     }
+
+    // ================= PRODUCTS =================
 
     public async Task<bool> SaveProductAsync(Product product)
     {
@@ -180,6 +186,17 @@ public class SupabaseService
         return response.IsSuccessStatusCode;
     }
 
+    public async Task<bool> DeleteProductAsync(int productId)
+    {
+        var request = new HttpRequestMessage(
+            HttpMethod.Delete,
+            $"{Url}/rest/v1/products?id=eq.{productId}"
+        );
+
+        var response = await _client.SendAsync(request);
+        return response.IsSuccessStatusCode;
+    }
+
     public async Task<List<Product>> GetProductsAsync(int userId)
     {
         var response = await _client.GetAsync(
@@ -215,6 +232,8 @@ public class SupabaseService
 
         return products;
     }
+
+    // ================= SALES =================
 
     public async Task<bool> SaveSaleAsync(Sale sale)
     {
@@ -262,6 +281,8 @@ public class SupabaseService
 
         return sales;
     }
+
+    // ================= SUPPLIER ORDERS =================
 
     public async Task<bool> SaveSupplierOrderAsync(SupplierOrder order)
     {
@@ -315,6 +336,8 @@ public class SupabaseService
 
         return orders;
     }
+
+    // ================= PARSER =================
 
     private User ParseUser(JsonElement u)
     {

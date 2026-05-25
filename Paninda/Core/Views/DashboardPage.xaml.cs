@@ -18,7 +18,7 @@ public partial class DashboardPage : ContentPage
     {
         base.OnAppearing();
 
-        var updatedUser = await App.Supabase.GetUserByEmailAsync(_currentUser.Email);
+        var updatedUser = await App.Supabase.GetUserByIdAsync(_currentUser.Id);
         if (updatedUser != null)
             _currentUser = updatedUser;
 
