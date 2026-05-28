@@ -7,7 +7,7 @@
     <ScrollView>
         <VerticalStackLayout Spacing="15">
 
-            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*,Auto,Auto">
+            <Grid BackgroundColor="#D9D9D9" Padding="15" ColumnDefinitions="Auto,*">
                 <Image Grid.Column="0" Source="logo.png" HeightRequest="35">
                     <Image.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLogoClicked" />
@@ -15,21 +15,6 @@
                 </Image>
 
                 <Label Grid.Column="1" />
-
-                <Label Grid.Column="2"
-                       Text="🔔"
-                       FontSize="24"
-                       Margin="0,0,10,0"
-                       TextColor="Black" />
-
-                <Label Grid.Column="3"
-                       Text="👤"
-                       FontSize="24"
-                       TextColor="Black">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnProfileClicked" />
-                    </Label.GestureRecognizers>
-                </Label>
             </Grid>
 
             <VerticalStackLayout Padding="20" Spacing="18">
@@ -61,10 +46,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="NameEntry"
-                           TextColor="Black"
-                           Placeholder="Enter product name"
-                           PlaceholderColor="Gray" />
+                    <Entry x:Name="NameEntry" TextColor="Black" Placeholder="Enter product name" PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Category" TextColor="Black" />
@@ -72,10 +54,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="CategoryEntry"
-                           TextColor="Black"
-                           Placeholder="e.g., Food, Drink"
-                           PlaceholderColor="Gray" />
+                    <Entry x:Name="CategoryEntry" TextColor="Black" Placeholder="e.g., Food, Drink" PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Initial Stock" TextColor="Black" />
@@ -83,11 +62,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="StockEntry"
-                           Keyboard="Numeric"
-                           TextColor="Black"
-                           Placeholder="0"
-                           PlaceholderColor="Gray" />
+                    <Entry x:Name="StockEntry" Keyboard="Numeric" TextColor="Black" Placeholder="0" PlaceholderColor="Gray" />
                 </Border>
 
                 <Label Text="Minimum Stock Level" TextColor="Black" />
@@ -95,12 +70,7 @@
                     <Border.StrokeShape>
                         <RoundRectangle CornerRadius="10" />
                     </Border.StrokeShape>
-                    <Entry x:Name="MinStockEntry"
-                           Keyboard="Numeric"
-                           Text="5"
-                           TextColor="Black"
-                           Placeholder="5"
-                           PlaceholderColor="Gray" />
+                    <Entry x:Name="MinStockEntry" Keyboard="Numeric" Text="5" TextColor="Black" Placeholder="5" PlaceholderColor="Gray" />
                 </Border>
 
                 <VerticalStackLayout x:Name="PremiumPriceSection" Spacing="18">
@@ -109,11 +79,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10" />
                         </Border.StrokeShape>
-                        <Entry x:Name="PriceEntry"
-                               Keyboard="Numeric"
-                               TextColor="Black"
-                               Placeholder="e.g., 25"
-                               PlaceholderColor="Gray" />
+                        <Entry x:Name="PriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 25" PlaceholderColor="Gray" />
                     </Border>
 
                     <Label Text="Cost Price / Puhunan" TextColor="Black" />
@@ -121,11 +87,7 @@
                         <Border.StrokeShape>
                             <RoundRectangle CornerRadius="10" />
                         </Border.StrokeShape>
-                        <Entry x:Name="CostPriceEntry"
-                               Keyboard="Numeric"
-                               TextColor="Black"
-                               Placeholder="e.g., 15"
-                               PlaceholderColor="Gray" />
+                        <Entry x:Name="CostPriceEntry" Keyboard="Numeric" TextColor="Black" Placeholder="e.g., 15" PlaceholderColor="Gray" />
                     </Border>
                 </VerticalStackLayout>
 
@@ -139,4 +101,5 @@
             </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
+
 </ContentPage>
